@@ -29,6 +29,15 @@ export default class Chart extends Component {
 		});
 	}
 
+	componentDidUpdate(prevProps) {
+		if(prevProps.cities.length !== this.props.cities.length || prevProps.compare !== this.props.compare) {
+			this.actions.requestData({
+				compare: this.props.compare,
+				cities: this.props.cities
+			});
+		}
+	}
+
 	buildProductList = () => {
 		return (
 			<select name='products' ref='productList' onChange={this.onProductChanged}>
@@ -63,6 +72,7 @@ export default class Chart extends Component {
 				<CityList
 					cities={this.props.cities}
 					removeCity={this.actions.removeCity}
+					addCity={this.actions.addCity}
 				/>
 				{this.buildProductList()}
 				{this.buildCompareList()}

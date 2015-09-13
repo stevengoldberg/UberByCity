@@ -10,26 +10,33 @@ const initialState = {
     displayProduct: 'uberX',
     compare: 'estimates/price',
     cities: initialLocations,
-    graphData: {},
+    graphData: [],
 };
 
 export function chart(state = initialState, action = {}) {
     return createReducer(state, action, {
         [appActions.UBER_DATA_SUCCEEDED](state, action) {
             const { data: { city, times = {}, prices = {} } } = action;
-
-            return {
-                ...state,
-                graphData: [
+            let newGraphData;
+            
+            if(!_.findWhere(state.graphData, {city: city})) {
+                newGraphData = [
                     ...state.graphData,
                     {
-                        city: city,
+                        city,
                         data: {
                             times,
                             prices,
                         },
                     },
-                ],
+                ];
+            } else {
+                newGraphData = state.graphData;
+            }
+
+            return {
+                ...state,
+                graphData: newGraphData,
             };
         },
 
@@ -45,5 +52,16 @@ export function chart(state = initialState, action = {}) {
                 cities: newCities,
             };
         },
+
+        [cityActions.CITY_ADDED](state, action) {
+            const { data: city} = action;
+
+            const newCities = [].concat(state.cities, city);
+
+            return {
+                ...state,
+                cities: newCities,
+            };
+        }
     });
 }
