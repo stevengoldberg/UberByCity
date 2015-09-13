@@ -19,3 +19,15 @@ export const productList = [
 	'uberBlack',
 	'uberSUV',
 ];
+
+export const comparatorList = [
+	{
+		name: 'Price',
+		value: 'estimates/price',
+	},
+	{
+		name: 'ETA',
+		value: 'estimates/time',
+	}
+
+];

@@ -4,29 +4,27 @@ import {  Provider } from 'react-redux';
 import Main from './Main';
 import * as reducers from 'reducers';
 import thunkMiddleware from 'redux-thunk';
-import logger from 'redux-logger';
+import createLogger from 'redux-logger';
 
 import { Router, Route } from 'react-router';
-import BrowserHistory from 'react-router/lib/BrowserHistory';
+import createBrowserHistory from 'history/lib/createBrowserHistory';
+import { Chart } from './components/';
 
-import { chart } from './components/';
-
+const logger = createLogger({collapsed: true});
 const reducersApp = combineReducers(reducers);
 const createStoreWithMiddleware = applyMiddleware(logger, thunkMiddleware)(createStore);
 const store = createStoreWithMiddleware(reducersApp);
-const history = new BrowserHistory();
+const history = new createBrowserHistory();
 
 export default class App extends Component {
   render() {
     return (
         <Provider store={ store }>
-          {() =>
-            <Router history={history}>
-              <Route path="/" component={Main}>
-                <Route path="chart" component={chart}></Route>
-              </Route>
-            </Router>
-          }
+          <Router history={history}>
+            <Route path="/" component={Main}>
+              <Route path="chart" component={Chart}></Route>
+            </Route>
+          </Router>
         </Provider>
     );
   }

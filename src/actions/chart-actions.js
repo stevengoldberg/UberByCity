@@ -1,5 +1,9 @@
 import $ from 'jquery';
 import _ from 'underscore';
+import assign from 'object-assign';
+
+import { appActions } from '../constants/app-actions';
+
 import { uberURI, geocodeURI, airportURI, airportToken, uberToken } from '../config';
 
 export function requestData(options) {
@@ -7,7 +11,7 @@ export function requestData(options) {
 
     return dispatch => {
         dispatch({
-            type: 'DATA_REQUESTED',
+            type: appActions.NEW_DATA_REQUESTED,
             data: options
         });
 
@@ -44,9 +48,10 @@ export function requestData(options) {
                         end_lng: cityCenter.lng,
                     });
                 })
-                .then(data => {
+                .then(result => {
+                    const data = assign({}, result, { city });
                     dispatch({
-                        type: 'UBER_DATA_LOADED',
+                        type: appActions.UBER_DATA_SUCCEEDED,
                         data,
                     });
                 });
