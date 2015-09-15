@@ -2,7 +2,8 @@ import $ from 'jquery';
 import _ from 'underscore';
 import assign from 'object-assign';
 
-import { appActions } from '../constants/app-actions';
+import { appActionTypes } from '../constants/app-actions';
+import * as cityActions from './city-list-actions';
 
 import { uberURI, geocodeURI, airportURI, airportToken, uberToken } from '../config';
 
@@ -11,18 +12,22 @@ export function requestData(options) {
 
     return dispatch => {
         dispatch({
-            type: appActions.NEW_DATA_REQUESTED,
+            type: appActionTypes.NEW_DATA_REQUESTED,
             data: options
         });
 
-        cities.forEach((city) => {
+        Promise.all(cities.map((city) => {
             const airport = airportLookup(city)
                 .then(result => {
-                    return {
-                        name: 'airport',
-                        lat: result.airports[0].lat,
-                        lng: result.airports[0].lng,
-                    };
+                    if (result.airports.length > 0) {
+                        return {
+                            name: 'airport',
+                            lat: result.airports[0].lat,
+                            lng: result.airports[0].lng,
+                        };
+                    } else {
+                        throw new Error(city);
+                    }
                 });
 
             const cityCenter = sendGeocodeRequest(city)
@@ -40,25 +45,50 @@ export function requestData(options) {
                 .then(result => {
                     const airport = _.findWhere(result, {name: 'airport'});
                     const cityCenter = _.findWhere(result, {name: 'cityCenter'});
-                    return uberLookup({
-                        type: compare,
-                        start_lat: airport.lat,
-                        start_lng: airport.lng,
-                        end_lat: cityCenter.lat,
-                        end_lng: cityCenter.lng,
-                    });
+                    let uberOptions;
+
+                    if(compare === 'estimates/price') {
+                        uberOptions = {
+                            type: compare,
+                            start_lat: airport.lat,
+                            start_lng: airport.lng,
+                            end_lat: cityCenter.lat,
+                            end_lng: cityCenter.lng,
+                        };
+                    } else if(compare === 'estimates/time') {
+                        uberOptions = {
+                            type: compare,
+                            start_lat: airport.lat,
+                            start_lng: airport.lng,
+                        }
+                    };
+                    return uberLookup(uberOptions);
                 })
                 .then(result => {
                     const data = assign({}, result, { city });
                     dispatch({
-                        type: appActions.UBER_DATA_SUCCEEDED,
+                        type: appActionTypes.UBER_DATA_SUCCEEDED,
                         data,
                     });
-                });
+                })
+                .catch(err => {
+                    dispatch({
+                        type: appActionTypes.UBER_DATA_FAILED,
+                        data: err,
+                    });
+                })
+        }))
+        .then(result => {
+            dispatch(allDataLoaded());
         });
-
     };
-    
+}
+
+export function changeComparison(comparison) {
+    return {
+        type: appActionTypes.COMPARISON_CHANGED,
+        data: comparison,
+    };
 }
 
 function uberLookup({type, start_lat, start_lng, end_lat, end_lng } = {}) {
@@ -113,4 +143,10 @@ function sendGeocodeRequest(location) {
 
         });
     });
+}
+
+function allDataLoaded() {
+    return {
+        type: appActionTypes.ALL_DATA_LOADED,
+    };
 }

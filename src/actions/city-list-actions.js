@@ -1,15 +1,15 @@
-import { cityActions } from '../constants/city-actions';
+import { cityActionTypes } from '../constants/city-actions';
 
 export function addCity(city) {
 	return {
-		type: cityActions.CITY_ADDED,
+		type: cityActionTypes.CITY_ADDED,
 		data: city,
 	};
 }
 
 export function removeCity(city) {
 	return {
-		type: cityActions.CITY_REMOVED,
+		type: cityActionTypes.CITY_REMOVED,
 		data: city,
 	};
 }

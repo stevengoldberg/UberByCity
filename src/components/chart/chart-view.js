@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import assign from 'object-assign';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { productList, comparatorList } from '../../config';
+import { productList, comparisonList } from '../../config';
 
 // Component styles
 import styles from './chart.styles.js';
@@ -20,6 +20,7 @@ export default class Chart extends Component {
 		super(props);
 		const actionCreators = assign({}, chartActions, cityActions);
 		this.actions = bindActionCreators(actionCreators, this.props.dispatch);
+		this.inputError = false;
 	}
 
 	componentDidMount() {
@@ -29,13 +30,12 @@ export default class Chart extends Component {
 		});
 	}
 
-	componentDidUpdate(prevProps) {
-		if(prevProps.cities.length !== this.props.cities.length || prevProps.compare !== this.props.compare) {
-			this.actions.requestData({
-				compare: this.props.compare,
-				cities: this.props.cities
-			});
-		}
+	addCity = (city) => {
+		const cities = [city];
+		this.actions.requestData({
+			compare: this.props.compare,
+			cities,
+		});
 	}
 
 	buildProductList = () => {
@@ -48,22 +48,18 @@ export default class Chart extends Component {
 
 	buildCompareList = () => {
 		return (
-			<select name='comparators' ref='compareList' onChange={this.onComparatorChanged}>
-				{comparatorList.map((comparator, i) => <option value={comparator.value} key={i}>{comparator.name}</option>)}
+			<select name='comparison' ref='comparisonList' onChange={this.onComparisonChanged}>
+				{comparisonList.map((comparison, i) => <option value={comparison.value} key={i}>{comparison.name}</option>)}
 			</select>
 		);
-	}
-
-	onCityChanged = () => {
-		console.log(this.refs.cityList.value);
 	}
 
 	onProductChanged = () => {
 		console.log(this.refs.productList.value);
 	}
 
-	onComparatorChanged = () => {
-		console.log(this.refs.compareList.value);
+	onComparisonChanged = () => {
+		this.actions.changeComparison(this.refs.comparisonList.value);
 	}
 
 	render() {
@@ -71,8 +67,11 @@ export default class Chart extends Component {
 			<div className={styles.container}>
 				<CityList
 					cities={this.props.cities}
+					graphData={this.props.graphData}
 					removeCity={this.actions.removeCity}
-					addCity={this.actions.addCity}
+					addCity={this.addCity}
+					showError={this.props.cityError}
+					loading={this.props.loading}
 				/>
 				{this.buildProductList()}
 				{this.buildCompareList()}

@@ -22,3 +22,14 @@
 :local(.cityListItem) {
 	vertical-align: top;
 }
+
+:local(.input) {
+	&:focus {
+		outline: none;
+	}
+}
+
+:local(.inputError) {
+	composes: input;
+	border: 1px solid red;
+}

@@ -1,6 +1,6 @@
 import keymirror from 'keymirror';
 
-export const cityActions = keymirror({
+export const cityActionTypes = keymirror({
 	CITY_REMOVED: null,
 	CITY_ADDED: null,
 });

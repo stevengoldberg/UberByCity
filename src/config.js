@@ -20,7 +20,7 @@ export const productList = [
 	'uberSUV',
 ];
 
-export const comparatorList = [
+export const comparisonList = [
 	{
 		name: 'Price',
 		value: 'estimates/price',
