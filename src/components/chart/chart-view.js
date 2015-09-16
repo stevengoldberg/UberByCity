@@ -64,17 +64,21 @@ export default class Chart extends Component {
 
 	render() {
 		return (
-			<div className={styles.container}>
-				<CityList
-					cities={this.props.cities}
-					graphData={this.props.graphData}
-					removeCity={this.actions.removeCity}
-					addCity={this.addCity}
-					showError={this.props.cityError}
-					loading={this.props.loading}
-				/>
-				{this.buildProductList()}
-				{this.buildCompareList()}
+			<div>
+				<div className={styles.container}>
+					<CityList
+						cities={this.props.cities}
+						graphData={this.props.graphData}
+						removeCity={this.actions.removeCity}
+						addCity={this.addCity}
+						showError={this.props.cityError}
+						loading={this.props.loading}
+					/>
+				</div>
+				<div className={styles.container}>
+					{this.buildCompareList()}
+					{this.buildProductList()}
+				</div>
 			</div>
 		);
 	}

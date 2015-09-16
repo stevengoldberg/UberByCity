@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { Spinner } from '../../components';
+import { Spinner, Button } from '../../components';
 
 // Component styles
 import styles from './city-list.styles.js';
@@ -24,14 +24,27 @@ export default class CityList extends Component {
 		addCity(newCity);
 	}
 
+	disableSubmit = () => {
+		return this.refs.cityInput === '' || this.props.loading;
+	}
+
 	render() {
 		const { cities } = this.props;
 
 		return (
 			<div className={styles.container}>
 				<form onSubmit={this.handleSubmit}>
-					<input className={this.props.showError ? styles.inputError : styles.input} ref='cityInput' placeholder='Add City'></input>
-					<button type='button' onClick={this.handleSubmit}>Submit</button>
+					<input
+						className={this.props.showError ? styles.inputError : styles.input}
+						ref='cityInput' 
+						placeholder='Add City'
+					>
+					</input>
+					<Button
+						label='Submit'
+						disabled={this.disableSubmit()}
+						onClick={this.handleSubmit}
+					/>
 					<Spinner show={this.props.loading}/>
 				</form>
 
