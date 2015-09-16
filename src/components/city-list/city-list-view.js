@@ -13,8 +13,10 @@ export default class CityList extends Component {
 	}
 
 	handleRemove = (city) => {
-		const { removeCity } = this.props;
-		removeCity(city);
+		const { removeCity, canRemove } = this.props;
+		if(canRemove) {
+			removeCity(city);
+		}
 	}
 
 	handleSubmit = (e) => {
@@ -25,7 +27,7 @@ export default class CityList extends Component {
 	}
 
 	disableSubmit = () => {
-		return this.refs.cityInput === '' || this.props.loading;
+		return this.refs.cityInput.value === '' || this.props.loading;
 	}
 
 	render() {
@@ -42,14 +44,13 @@ export default class CityList extends Component {
 					</input>
 					<Button
 						label='Submit'
-						disabled={this.disableSubmit()}
 						onClick={this.handleSubmit}
 					/>
 					<Spinner show={this.props.loading}/>
 				</form>
 
 				<ul ref='cityList' className={styles.cityList}>
-					{cities.map((city, i) => <li key={i} ref={city}><span className={styles.cityListClose} onClick={this.handleRemove.bind(this, city)}>x</span>
+					{cities.map((city, i) => <li key={i} ref={city}><span className={this.props.canRemove ? styles.cityListClose : styles['cityListClose-disabled']} onClick={this.handleRemove.bind(this, city)}>x</span>
 						<span className={styles.cityListItem}>{city}</span>
 					</li>)}
 				</ul>

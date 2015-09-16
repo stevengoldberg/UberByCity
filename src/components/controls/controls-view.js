@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import assign from 'object-assign';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { productList, comparisonList } from '../../config';
 
 // Component styles
-import styles from './chart.styles.js';
+import styles from './controls.styles.js';
 
 // Actions
 import * as chartActions from '../../actions/chart-actions';
 import * as cityActions from '../../actions/city-list-actions';
 
 // Components
-import { CityList } from '../../components';
+import { CityList, Header, D3Graph } from '../../components';
 
 @connect(state => state.chart)
 export default class Chart extends Component {
@@ -20,7 +20,12 @@ export default class Chart extends Component {
 		super(props);
 		const actionCreators = assign({}, chartActions, cityActions);
 		this.actions = bindActionCreators(actionCreators, this.props.dispatch);
-		this.inputError = false;
+		this.D3Graph = null;
+	}
+
+	static propTypes = {
+		compare: PropTypes.string.isRequired,
+		cities: PropTypes.array.isRequired,
 	}
 
 	componentDidMount() {
@@ -28,6 +33,24 @@ export default class Chart extends Component {
 			compare: this.props.compare,
 			cities: this.props.cities
 		});
+
+		this.D3Graph = new D3Graph(this.refs.graph, this.getChartState());
+	}
+
+	componentDidUpdate() {
+		this.D3Graph.update(this.getChartState());
+	}
+
+	getChartState() {
+		return {
+			graphData: this.props.graphData,
+			compare: this.props.compare,
+			display: this.props.displayProduct, 
+		};
+	}
+
+	componentWillUnmount() {
+		//this.D3Graph.destroy(this.refs.graph);
 	}
 
 	addCity = (city) => {
@@ -59,12 +82,17 @@ export default class Chart extends Component {
 	}
 
 	onComparisonChanged = () => {
-		this.actions.changeComparison(this.refs.comparisonList.value);
+		this.actions.requestData({
+			compare: this.refs.comparisonList.value,
+			cities: this.props.cities,
+			reset: true,
+		});
 	}
 
 	render() {
 		return (
 			<div>
+				<Header />
 				<div className={styles.container}>
 					<CityList
 						cities={this.props.cities}
@@ -73,14 +101,13 @@ export default class Chart extends Component {
 						addCity={this.addCity}
 						showError={this.props.cityError}
 						loading={this.props.loading}
+						canRemove={this.props.cities.length > 1}
 					/>
-				</div>
-				<div className={styles.container}>
 					{this.buildCompareList()}
 					{this.buildProductList()}
 				</div>
+				<div ref='graph' className={styles.graph}></div>
 			</div>
 		);
 	}
 }
-

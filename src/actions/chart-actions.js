@@ -13,7 +13,7 @@ export function requestData(options) {
     return dispatch => {
         dispatch({
             type: appActionTypes.NEW_DATA_REQUESTED,
-            data: options
+            data: options,
         });
 
         Promise.all(cities.map((city) => {
@@ -84,10 +84,14 @@ export function requestData(options) {
     };
 }
 
-export function changeComparison(comparison) {
+export function changeComparison(data) {
+    const { compare, cities } = data;
+
+    requestData(data);
+    
     return {
         type: appActionTypes.COMPARISON_CHANGED,
-        data: comparison,
+        compare,
     };
 }
 

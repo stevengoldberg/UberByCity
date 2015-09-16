@@ -17,14 +17,25 @@ const initialState = {
 export function chart(state = initialState, action = {}) {
     return createReducer(state, action, {
         [appActionTypes.NEW_DATA_REQUESTED](state, action) {
+            const { data: { reset, compare } } = action;
+            let newGraphData;
+
+            if(reset) {
+                newGraphData = [];
+            } else {
+                newGraphData = state.graphData;
+            }
+
             return {
                 ...state,
+                graphData: newGraphData,
                 loading: true,
+                compare,
             };
         },
 
         [appActionTypes.UBER_DATA_SUCCEEDED](state, action) {
-            const { data: { city, times = {}, prices = {} } } = action;
+            const { data: { city, times = null, prices = null } } = action;
             let newGraphData;
             let newCities;
 
@@ -33,20 +44,27 @@ export function chart(state = initialState, action = {}) {
             } else {
                 newCities = state.cities;
             }
-            
-            if(!_.findWhere(state.graphData, {city: city})) {
+
+            if(times !== null) {
                 newGraphData = [
                     ...state.graphData,
                     {
                         city,
                         data: {
                             times,
-                            prices,
                         },
                     },
                 ];
             } else {
-                newGraphData = state.graphData;
+                newGraphData = [
+                    ...state.graphData,
+                    {
+                        city,
+                        data: {
+                            prices,
+                        },
+                    },
+                ];
             }
 
             return {
@@ -54,15 +72,6 @@ export function chart(state = initialState, action = {}) {
                 cityError: false,
                 graphData: newGraphData,
                 cities: newCities,
-            };
-        },
-
-        [appActionTypes.COMPARISON_CHANGED](state, action) {
-            const { data: compare } = action;
-
-            return {
-                ...state,
-                compare,
             };
         },
 
@@ -115,6 +124,15 @@ export function chart(state = initialState, action = {}) {
                 ...state,
                 loading: false,
             };
-        }
+        },
+
+        [appActionTypes.COMPARISON_CHANGED](state, action) {
+            const { compare } = action;
+            return {
+                ...state,
+                compare,
+                graphData: [],
+            };
+        },
     });
 }

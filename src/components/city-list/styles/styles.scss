@@ -1,7 +1,7 @@
 :local(.container) {
 	display: inline-block;
 	vertical-align: top;
-	margin: 0 5px;
+	margin: 0 10px;
 	text-align: left;
 }
 
@@ -20,6 +20,12 @@
 	vertical-align: top;
 }
 
+:local(.cityListClose-disabled) {
+	composes: cityListClose;
+	color: grey;
+	cursor: not-allowed;
+}
+
 :local(.cityListItem) {
 	vertical-align: top;
 }
@@ -36,6 +42,11 @@
 }
 
 :local(select) {
-	margin-bottom: 50px;
-	display: block;
+	margin: 0 10px;
+}
+
+:local(.graph) {
+	width: 100%;
+	max-width: 800px;
+	margin: auto;
 }
