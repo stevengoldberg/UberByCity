@@ -26,6 +26,8 @@ export default class Chart extends Component {
 	static propTypes = {
 		compare: PropTypes.string.isRequired,
 		cities: PropTypes.array.isRequired,
+		graphData: PropTypes.array.isRequired,
+		displayProduct: PropTypes.string.isRequired,
 	}
 
 	componentDidMount() {
@@ -63,17 +65,33 @@ export default class Chart extends Component {
 
 	buildProductList = () => {
 		return (
-			<select name='products' ref='productList' onChange={this.onProductChanged} disabled={this.props.loading}>
-				{productList.map((product, i) => <option value={product} key={i}>{product}</option>)}
-			</select>
+			<div className={styles.selectContainer}>
+				<label for='products'>Product Type</label>
+				<select name='products' ref='productList' onChange={this.onProductChanged} disabled={this.props.loading}>
+					{productList.map((product, i) => <option value={product} key={i}>{product}</option>)}
+				</select>
+			</div>
 		);
 	}
 
 	buildCompareList = () => {
 		return (
-			<select name='comparison' ref='comparisonList' onChange={this.onComparisonChanged} disabled={this.props.loading}>
-				{comparisonList.map((comparison, i) => <option value={comparison.value} key={i}>{comparison.name}</option>)}
-			</select>
+			<div className={styles.selectContainer}>
+				<label for='comparison'>Data Type</label>
+				<select name='comparison' ref='comparisonList' onChange={this.onComparisonChanged} disabled={this.props.loading}>
+					{comparisonList.map((comparison, i) => <option value={comparison.value} key={i}>{comparison.name}</option>)}
+				</select>
+			</div>
+		);
+	}
+
+	buildHeadline = () => {
+		const { compare } = this.props;
+		const headline = compare === 'estimates/time' ? 'How long will it take to get an Uber at the airport?' :
+			compare === 'estimates/price' ? 'How much will an Uber ride from the airport to the city center cost?' : null;
+
+		return (
+			<h1>{headline}</h1>
 		);
 	}
 
@@ -105,6 +123,7 @@ export default class Chart extends Component {
 					/>
 					{this.buildCompareList()}
 					{this.buildProductList()}
+					{this.buildHeadline()}
 				</div>
 				<div ref='graph' className={styles.graph}></div>
 			</div>
