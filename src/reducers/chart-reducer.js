@@ -12,6 +12,7 @@ const initialState = {
     cities: initialLocations,
     graphData: [],
     cityError: false,
+    refreshTime: new Date().toLocaleTimeString(),
 };
 
 export function chart(state = initialState, action = {}) {
@@ -113,6 +114,7 @@ export function chart(state = initialState, action = {}) {
             return {
                 ...state,
                 loading: false,
+                refreshTime: new Date().toLocaleTimeString(),
             };
         },
 

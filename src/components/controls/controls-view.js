@@ -12,7 +12,7 @@ import * as chartActions from '../../actions/chart-actions';
 import * as cityActions from '../../actions/city-list-actions';
 
 // Components
-import { CityList, Header, D3Graph } from '../../components';
+import { CityList, Header, D3Graph, Refresh } from '../../components';
 
 @connect(state => state.chart)
 export default class Chart extends Component {
@@ -87,12 +87,12 @@ export default class Chart extends Component {
 
 	buildHeadline = () => {
 		const { compare } = this.props;
-		const headline = compare === 'estimates/time' ? 'How long will it take to get an Uber at the airport?' :
-			compare === 'estimates/price' ? 'How much will an Uber ride from the airport to the city center cost?' : null;
 
-		return (
-			<h1>{headline}</h1>
-		);
+		if(compare === 'estimates/time'){
+			return (<h1><span className={styles.emphasize}>How long will it take</span> to get an Uber at the airport?</h1>)
+		} else if (compare === 'estimates/price') {
+			return (<h1><span className={styles.emphasize}>How much will it cost</span> to take an Uber from the airport to the city center?</h1>);
+		}
 	}
 
 	onProductChanged = () => {
@@ -111,18 +111,29 @@ export default class Chart extends Component {
 		return (
 			<div>
 				<Header />
-				<div className={styles.container}>
-					<CityList
-						cities={this.props.cities}
-						graphData={this.props.graphData}
-						removeCity={this.actions.removeCity}
-						addCity={this.addCity}
-						showError={this.props.cityError}
-						loading={this.props.loading}
-						canRemove={this.props.cities.length > 1}
-					/>
-					{this.buildCompareList()}
-					{this.buildProductList()}
+				<div className={styles.outerContainer}>
+					<div className={styles.container}>
+						<CityList
+							cities={this.props.cities}
+							graphData={this.props.graphData}
+							removeCity={this.actions.removeCity}
+							addCity={this.addCity}
+							showError={this.props.cityError}
+							loading={this.props.loading}
+							canRemove={this.props.cities.length > 1}
+						/>
+					</div>
+					<div className={styles.container}>
+						{this.buildCompareList()}
+						{this.buildProductList()}
+						<Refresh 
+							refreshTime={this.props.refreshTime} 
+							refreshData={this.actions.requestData.bind(this, {
+								compare: this.props.compare,
+								cities: this.props.cities,
+							})}
+						/>
+					</div>
 					{this.buildHeadline()}
 				</div>
 				<div ref='graph' className={styles.graph}></div>

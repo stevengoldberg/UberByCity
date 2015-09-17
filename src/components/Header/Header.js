@@ -4,11 +4,9 @@ import React, { Component } from 'react';
 import styles from './styles.js';
 
 export default class Header extends Component {
-  render() {
-    return (
-      <div className={`${ styles }`}>
-        Visualizing Uber Data
-      </div>
-    );
-  }
+	render() {
+		return (<div className={styles}>
+			Live Uber Data By City
+		</div>);
+	}
 }

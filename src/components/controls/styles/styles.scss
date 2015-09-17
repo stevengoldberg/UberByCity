@@ -1,8 +1,13 @@
+:local(.outerContainer) {
+	text-align: center;
+}
+
 :local(.container) {
 	text-align: center;
-	width: 75%;
 	margin: 30px auto;
 	font-size: 1.2em;
+	display: inline-block;
+	vertical-align: top;
 }
 
 :local(.graph) {
@@ -22,5 +27,9 @@
 }
 
 :local(h1) {
-	font-size: 2em;
+	font-size: 1.9em;
+}
+
+:local(.emphasize) {
+	text-decoration: underline;
 }

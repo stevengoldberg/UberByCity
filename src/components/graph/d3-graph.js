@@ -8,7 +8,6 @@ export default class D3Graph {
 		const height = el.clientHeight;
 
 		const displayData = this.parseData(props);
-		console.log(displayData);
 
 		this.svg = d3.select(el).append('svg')
 			.attr({
@@ -30,7 +29,7 @@ export default class D3Graph {
 		graphData.forEach((cityObject) => {
 			let current = {};
 			const response = _.find(cityObject.data.data, (data) => 
-				data['display_name'].toLowerCase() === display.toLowerCase());
+				data['display_name'].toLowerCase().trim() === display.toLowerCase());
 
 			if (compare === 'estimates/price') {
 				current.data = this.parsePrice(response);
@@ -44,16 +43,18 @@ export default class D3Graph {
 				currentData.push(current);
 			}
 		}, this);
-		
+
 		return currentData;
 	}
 
 	parsePrice = (response) => {
+		// Average price estimate
 		return response ? (response.high_estimate + response.low_estimate) / 2 : null;
 	}
 
 	parseTime = (response) => {
-		return response ? response.estimate : null;
+		// Convert ETA to minutes
+		return response ? response.estimate / 60 : null;
 	}
 
 	destroy() {
