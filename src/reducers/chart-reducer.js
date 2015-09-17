@@ -7,7 +7,7 @@ import { cityActionTypes } from '../constants/city-actions';
 
 
 const initialState = {
-    displayProduct: 'uberX',
+    displayProduct: 'uberBlack',
     compare: 'estimates/price',
     cities: initialLocations,
     graphData: [],
@@ -51,8 +51,9 @@ export function chart(state = initialState, action = {}) {
                     {
                         city,
                         data: {
-                            times,
-                        },
+                                type: 'time',
+                                data: times,
+                            },
                     },
                 ];
             } else {
@@ -61,7 +62,8 @@ export function chart(state = initialState, action = {}) {
                     {
                         city,
                         data: {
-                            prices,
+                            type: 'prices',
+                            data: prices,
                         },
                     },
                 ];
@@ -99,18 +101,6 @@ export function chart(state = initialState, action = {}) {
             };
         },
 
-        [cityActionTypes.CITY_ADD_FAILED](state, action) {
-            const { data: { message: invalidCity } } = action;
-            const newCities = _.without(state.cities, invalidCity);
-
-            return {
-                ...state,
-                cities: newCities,
-                cityError: true,
-                loading: false,
-            };
-        },
-
         [appActionTypes.UBER_DATA_FAILED](state, action) {
             return {
                 ...state,
@@ -132,6 +122,14 @@ export function chart(state = initialState, action = {}) {
                 ...state,
                 compare,
                 graphData: [],
+            };
+        },
+
+        [appActionTypes.PRODUCT_CHANGED](state, action) {
+            const { data: displayProduct } = action;
+            return {
+                ...state,
+                displayProduct,
             };
         },
     });

@@ -7,17 +7,22 @@ export const airportURI = `https://airport.api.aero/airport/match`;
 export const geocodeURI = `http://maps.googleapis.com/maps/api/geocode/json`;
 
 export const initialLocations = [
+	'San Francisco',
+	'Los Angeles',
+	'San Diego',
+	'Seattle',
+	'Pittsburgh',
 	'Philadelphia',
 	'New York',
 	'Boston'
 ];
 
 export const productList = [
-	'uberFamily',
+	'uberBlack',
 	'uberX',
 	'uberXL',
-	'uberBlack',
 	'uberSUV',
+	'uberFamily',
 ];
 
 export const comparisonList = [

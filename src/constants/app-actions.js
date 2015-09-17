@@ -5,5 +5,6 @@ export const appActionTypes = keymirror({
 	UBER_DATA_SUCCEEDED: null,
 	UBER_DATA_FAILED: null,
 	COMPARISON_CHANGED: null,
+	PRODUCT_CHANGED: null,
 	ALL_DATA_LOADED: null,
 });

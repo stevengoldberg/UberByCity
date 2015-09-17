@@ -154,3 +154,10 @@ function allDataLoaded() {
         type: appActionTypes.ALL_DATA_LOADED,
     };
 }
+
+export function changeDisplayProduct(product) {
+    return {
+        type: appActionTypes.PRODUCT_CHANGED,
+        data: product,
+    };
+}

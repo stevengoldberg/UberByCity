@@ -63,7 +63,7 @@ export default class Chart extends Component {
 
 	buildProductList = () => {
 		return (
-			<select name='products' ref='productList' onChange={this.onProductChanged}>
+			<select name='products' ref='productList' onChange={this.onProductChanged} disabled={this.props.loading}>
 				{productList.map((product, i) => <option value={product} key={i}>{product}</option>)}
 			</select>
 		);
@@ -71,14 +71,14 @@ export default class Chart extends Component {
 
 	buildCompareList = () => {
 		return (
-			<select name='comparison' ref='comparisonList' onChange={this.onComparisonChanged}>
+			<select name='comparison' ref='comparisonList' onChange={this.onComparisonChanged} disabled={this.props.loading}>
 				{comparisonList.map((comparison, i) => <option value={comparison.value} key={i}>{comparison.name}</option>)}
 			</select>
 		);
 	}
 
 	onProductChanged = () => {
-		console.log(this.refs.productList.value);
+		this.actions.changeDisplayProduct(this.refs.productList.value);
 	}
 
 	onComparisonChanged = () => {
