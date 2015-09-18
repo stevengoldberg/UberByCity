@@ -9,6 +9,7 @@ import 'bootstrap-webpack';
 import { Router, Route } from 'react-router';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
 import { Controls } from './components/';
+import 'style!./styles/main.scss';
 
 const logger = createLogger({collapsed: true});
 const reducersApp = combineReducers(reducers);

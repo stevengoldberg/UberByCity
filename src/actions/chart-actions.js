@@ -72,10 +72,7 @@ export function requestData(options) {
                     });
                 })
                 .catch(err => {
-                    dispatch({
-                        type: appActionTypes.UBER_DATA_FAILED,
-                        data: err,
-                    });
+                    dispatch(dataError(err));
                 })
         }))
         .then(result => {
@@ -159,5 +156,12 @@ export function changeDisplayProduct(product) {
     return {
         type: appActionTypes.PRODUCT_CHANGED,
         data: product,
+    };
+}
+
+export function dataError(error) {
+    return {
+        type: appActionTypes.UBER_DATA_FAILED,
+        data: error,
     };
 }

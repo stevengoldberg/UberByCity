@@ -1,10 +1,12 @@
 :local(.outerContainer) {
 	text-align: center;
+	max-width: 95%;
+	margin: auto;
 }
 
 :local(.container) {
 	text-align: center;
-	margin: 30px auto;
+	margin: 20px auto;
 	font-size: 1.2em;
 	display: inline-block;
 	vertical-align: top;
@@ -31,5 +33,6 @@
 }
 
 :local(.emphasize) {
-	text-decoration: underline;
+	//text-decoration: underline;
+	font-weight: bold;
 }

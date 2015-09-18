@@ -56,18 +56,23 @@ export default class Chart extends Component {
 	}
 
 	addCity = (city) => {
-		const cities = [city];
-		this.actions.requestData({
-			compare: this.props.compare,
-			cities,
-		});
+		if(this.props.cities.indexOf(city) === -1) {
+			const cities = [city];
+			this.actions.requestData({
+				compare: this.props.compare,
+				cities,
+			});
+		} else {
+			this.actions.dataError(city);
+		}
+		
 	}
 
 	buildProductList = () => {
 		return (
 			<div className={styles.selectContainer}>
-				<label for='products'>Product Type</label>
-				<select name='products' ref='productList' onChange={this.onProductChanged} disabled={this.props.loading}>
+				<label htmlFor='products'>Product Type</label>
+				<select id='products' ref='productList' onChange={this.onProductChanged} disabled={this.props.loading}>
 					{productList.map((product, i) => <option value={product} key={i}>{product}</option>)}
 				</select>
 			</div>
@@ -77,8 +82,8 @@ export default class Chart extends Component {
 	buildCompareList = () => {
 		return (
 			<div className={styles.selectContainer}>
-				<label for='comparison'>Data Type</label>
-				<select name='comparison' ref='comparisonList' onChange={this.onComparisonChanged} disabled={this.props.loading}>
+				<label htmlFor='comparison'>Data Type</label>
+				<select id='comparison' ref='comparisonList' onChange={this.onComparisonChanged} disabled={this.props.loading}>
 					{comparisonList.map((comparison, i) => <option value={comparison.value} key={i}>{comparison.name}</option>)}
 				</select>
 			</div>
@@ -89,9 +94,9 @@ export default class Chart extends Component {
 		const { compare } = this.props;
 
 		if(compare === 'estimates/time'){
-			return (<h1><span className={styles.emphasize}>How long will it take</span> to get an Uber at the airport?</h1>)
+			return (<h1><span className={styles.emphasize}>How long will it take</span> to get an <span className={styles.emphasize}>{this.props.displayProduct}</span> at the airport?</h1>)
 		} else if (compare === 'estimates/price') {
-			return (<h1><span className={styles.emphasize}>How much will it cost</span> to take an Uber from the airport to the city center?</h1>);
+			return (<h1><span className={styles.emphasize}>How much will it cost</span> to take an <span className={styles.emphasize}>{this.props.displayProduct}</span> from the airport to the city center?</h1>);
 		}
 	}
 
@@ -124,8 +129,6 @@ export default class Chart extends Component {
 						/>
 					</div>
 					<div className={styles.container}>
-						{this.buildCompareList()}
-						{this.buildProductList()}
 						<Refresh 
 							refreshTime={this.props.refreshTime} 
 							refreshData={this.actions.requestData.bind(this, {
@@ -133,6 +136,8 @@ export default class Chart extends Component {
 								cities: this.props.cities,
 							})}
 						/>
+						{this.buildCompareList()}
+						{this.buildProductList()}
 					</div>
 					{this.buildHeadline()}
 				</div>
