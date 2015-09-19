@@ -1,0 +1,29 @@
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
+.axis {
+  font: 11px sans-serif;
+  text {
+  	stroke: black;
+  }
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: black;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.labelText {
+  font: 13px sans-serif;
+}

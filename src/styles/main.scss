@@ -5,7 +5,8 @@
 @import 'fonts/roboto';
 @import 'typography';
 
+$clr-error: red;
+
 :global(body) {
   position: relative; 
-  overflow: hidden;
 }

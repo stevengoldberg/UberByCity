@@ -7,4 +7,5 @@ export const appActionTypes = keymirror({
 	COMPARISON_CHANGED: null,
 	PRODUCT_CHANGED: null,
 	ALL_DATA_LOADED: null,
+	TIMER_TICK: null,
 });

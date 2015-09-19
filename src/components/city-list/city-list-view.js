@@ -24,6 +24,7 @@ export default class CityList extends Component {
 		const newCity = this.refs.cityInput.value;
 		const { addCity } = this.props;
 		addCity(newCity);
+		this.refs.cityInput.value = '';
 	}
 
 	disableSubmit = () => {
@@ -50,8 +51,13 @@ export default class CityList extends Component {
 				</form>
 
 				<ul ref='cityList' className={styles.cityList}>
-					{cities.map((city, i) => <li key={i} ref={city}><span className={this.props.canRemove ? styles.cityListClose : styles['cityListClose-disabled']} onClick={this.handleRemove.bind(this, city)}>x</span>
-						<span className={styles.cityListItem}>{city}</span>
+					{cities.map((city, i) => <li key={i} ref={city}>
+						<span className={this.props.canRemove ? styles.cityListClose : styles['cityListClose-disabled']} onClick={this.handleRemove.bind(this, city)}>
+							x
+						</span>
+						<span className={this.props.erroredCities.indexOf(city) > -1 ? styles.cityListItemError : styles.cityListItem}>
+							{city}
+						</span>
 					</li>)}
 				</ul>
 			</div>

@@ -1,7 +1,9 @@
+@import '../../../styles/main';
+
 :local(.container) {
 	display: inline-block;
 	vertical-align: top;
-	margin: 15px;
+	margin: 10px 15px;
 	text-align: left;
 }
 
@@ -31,6 +33,11 @@
 	vertical-align: top;
 }
 
+:local(.cityListItemError) {
+	composes: cityListItem;
+	color: $clr-error;
+}
+
 :local(.input) {
 	&:focus {
 		outline: none;
@@ -39,7 +46,7 @@
 
 :local(.inputError) {
 	composes: input;
-	border: 2px solid red;
+	border: 2px solid $clr-error;
 }
 
 :local(select) {

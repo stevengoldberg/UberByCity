@@ -5,7 +5,7 @@ import assign from 'object-assign';
 import { appActionTypes } from '../constants/app-actions';
 import * as cityActions from './city-list-actions';
 
-import { uberURI, geocodeURI, airportURI, airportToken, uberToken } from '../config';
+import * as config from 'config';
 
 export function requestData(options) {
     const { cities, compare } = options;
@@ -20,10 +20,20 @@ export function requestData(options) {
             const airport = airportLookup(city)
                 .then(result => {
                     if (result.airports.length > 0) {
+
+                        /*
+                         * Filter out irrelevant airport results. E.g., the response for hitting the airport
+                         * endpoint with "Austin" will include "Austin Straubel Intl" in Green Bay, WI!
+                         */
+
+                        const airportList = result.airports.filter((airport) => {
+                            return airport.city.toLowerCase().indexOf(city.toLowerCase()) > -1;
+                        });
+
                         return {
                             name: 'airport',
-                            lat: result.airports[0].lat,
-                            lng: result.airports[0].lng,
+                            lat: airportList[0].lat,
+                            lng: airportList[0].lng,
                         };
                     } else {
                         throw new Error(city);
@@ -37,6 +47,9 @@ export function requestData(options) {
                         lat: result.results[0].geometry.location.lat,
                         lng: result.results[0].geometry.location.lng,
                     };
+                })
+                .catch(err => {
+                    dispatch(dataError({message: city}));
                 });
 
             const coordRequests = [cityCenter, airport];
@@ -45,23 +58,24 @@ export function requestData(options) {
                 .then(result => {
                     const airport = _.findWhere(result, {name: 'airport'});
                     const cityCenter = _.findWhere(result, {name: 'cityCenter'});
-                    let uberOptions;
+                    
+                    /*
+                     * The Uber price estimate endpoint takes a start and end location;
+                     * the ETA endpoint just takes one location.
+                     */
+
+                    let uberOptions = {
+                        type: compare,
+                        start_lat: airport.lat,
+                        start_lng: airport.lng,
+                        cityName: city,
+                    };
 
                     if(compare === 'estimates/price') {
-                        uberOptions = {
-                            type: compare,
-                            start_lat: airport.lat,
-                            start_lng: airport.lng,
-                            end_lat: cityCenter.lat,
-                            end_lng: cityCenter.lng,
-                        };
-                    } else if(compare === 'estimates/time') {
-                        uberOptions = {
-                            type: compare,
-                            start_lat: airport.lat,
-                            start_lng: airport.lng,
-                        }
-                    };
+                        uberOptions.end_lat = cityCenter.lat;
+                        uberOptions.end_lng = cityCenter.lng;
+                    } 
+
                     return uberLookup(uberOptions);
                 })
                 .then(result => {
@@ -92,19 +106,19 @@ export function changeComparison(data) {
     };
 }
 
-function uberLookup({type, start_lat, start_lng, end_lat, end_lng } = {}) {
+function uberLookup({type, start_lat, start_lng, end_lat, end_lng, cityName} = {}) {
     return new Promise((resolve, reject) => {
-        $.ajax(`${uberURI}/${type}?start_latitude=${start_lat}&start_longitude=${start_lng}&end_latitude=${end_lat}&end_longitude=${end_lng}`, {
+        $.ajax(`${config.uberURI}/${type}?start_latitude=${start_lat}&start_longitude=${start_lng}&end_latitude=${end_lat}&end_longitude=${end_lng}`, {
             method: 'GET',
             headers: {
-                Authorization: `Token ${uberToken}`,
+                Authorization: `Token ${config.uberToken}`,
             },
             success: (res, status, xhr) => {
                 resolve(res);
             },
 
             error: (xhr, status, error) => {
-                reject(error);
+                reject({message: cityName});
             },
 
         });
@@ -114,7 +128,7 @@ function uberLookup({type, start_lat, start_lng, end_lat, end_lng } = {}) {
 
 function airportLookup(city) {
     return new Promise((resolve, reject) => {
-        $.ajax(`${airportURI}/${encodeURIComponent(city)}?user_key=${airportToken}`, {
+        $.ajax(`${config.airportURI}/${encodeURIComponent(city)}?user_key=${config.airportToken}`, {
             method: 'GET',
             jsonp: 'callback',
             dataType: 'jsonp',
@@ -123,7 +137,7 @@ function airportLookup(city) {
             },
 
             error: (xhr, status, error) => {
-                reject(error);
+                reject({message: city});
             },
 
         });
@@ -132,7 +146,7 @@ function airportLookup(city) {
 
 function sendGeocodeRequest(location) {
     return new Promise((resolve, reject) => {
-        $.ajax(`${geocodeURI}?address=${location}`, {
+        $.ajax(`${config.geocodeURI}?address=${location}&key=${config.geocodeToken}`, {
             method: 'GET',
             success: (res, status, xhr) => {
                 resolve(res);
@@ -162,6 +176,12 @@ export function changeDisplayProduct(product) {
 export function dataError(error) {
     return {
         type: appActionTypes.UBER_DATA_FAILED,
-        data: error,
+        error,
+    };
+}
+
+export function countdownTick() {
+    return {
+        type: appActionTypes.TIMER_TICK,
     };
 }

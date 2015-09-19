@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import assign from 'object-assign';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { productList, comparisonList } from '../../config';
+import * as config from 'config';
 
 // Component styles
 import styles from './controls.styles.js';
@@ -21,6 +21,7 @@ export default class Chart extends Component {
 		const actionCreators = assign({}, chartActions, cityActions);
 		this.actions = bindActionCreators(actionCreators, this.props.dispatch);
 		this.D3Graph = null;
+		this.timer = null;
 	}
 
 	static propTypes = {
@@ -33,26 +34,45 @@ export default class Chart extends Component {
 	componentDidMount() {
 		this.actions.requestData({
 			compare: this.props.compare,
-			cities: this.props.cities
+			cities: this.props.cities,
+
 		});
 
 		this.D3Graph = new D3Graph(this.refs.graph, this.getChartState());
+		this.timer = setInterval(this.actions.countdownTick, 1000);
 	}
 
-	componentDidUpdate() {
-		this.D3Graph.update(this.getChartState());
+	componentDidUpdate(prevProps) {
+		if (prevProps.graphData.length !== this.props.graphData.length || prevProps.compare !== this.props.compare ||
+			prevProps.displayProduct !== this.props.displayProduct) {
+			this.D3Graph.clearChart();
+			this.D3Graph.update(this.getChartState());
+		}
+		if(this.props.countdown === 0) {
+			this.actions.requestData({
+				compare: this.props.compare,
+				cities: this.props.cities,
+			});
+		}
 	}
 
 	getChartState() {
 		return {
 			graphData: this.props.graphData,
 			compare: this.props.compare,
-			display: this.props.displayProduct, 
+			display: this.props.displayProduct,
+			margin: {
+				top: 20,
+				right: 20,
+				bottom: 30,
+				left: 60,
+			},
 		};
 	}
 
 	componentWillUnmount() {
 		//this.D3Graph.destroy(this.refs.graph);
+		clearInterval(this.timer);
 	}
 
 	addCity = (city) => {
@@ -73,7 +93,7 @@ export default class Chart extends Component {
 			<div className={styles.selectContainer}>
 				<label htmlFor='products'>Product Type</label>
 				<select id='products' ref='productList' onChange={this.onProductChanged} disabled={this.props.loading}>
-					{productList.map((product, i) => <option value={product} key={i}>{product}</option>)}
+					{config.productList.map((product, i) => <option value={product} key={i}>{product}</option>)}
 				</select>
 			</div>
 		);
@@ -84,7 +104,7 @@ export default class Chart extends Component {
 			<div className={styles.selectContainer}>
 				<label htmlFor='comparison'>Data Type</label>
 				<select id='comparison' ref='comparisonList' onChange={this.onComparisonChanged} disabled={this.props.loading}>
-					{comparisonList.map((comparison, i) => <option value={comparison.value} key={i}>{comparison.name}</option>)}
+					{config.comparisonList.map((comparison, i) => <option value={comparison.value} key={i}>{comparison.name}</option>)}
 				</select>
 			</div>
 		);
@@ -108,7 +128,7 @@ export default class Chart extends Component {
 		this.actions.requestData({
 			compare: this.refs.comparisonList.value,
 			cities: this.props.cities,
-			reset: true,
+			reset: 'graph',
 		});
 	}
 
@@ -120,6 +140,7 @@ export default class Chart extends Component {
 					<div className={styles.container}>
 						<CityList
 							cities={this.props.cities}
+							erroredCities={this.props.erroredCities}
 							graphData={this.props.graphData}
 							removeCity={this.actions.removeCity}
 							addCity={this.addCity}
@@ -135,6 +156,7 @@ export default class Chart extends Component {
 								compare: this.props.compare,
 								cities: this.props.cities,
 							})}
+							countdown={this.props.countdown}
 						/>
 						{this.buildCompareList()}
 						{this.buildProductList()}

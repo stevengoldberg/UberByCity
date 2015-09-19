@@ -5,7 +5,6 @@ import * as reducers from 'reducers';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
 import 'bootstrap-webpack';
-
 import { Router, Route } from 'react-router';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
 import { Controls } from './components/';

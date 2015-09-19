@@ -8,11 +8,17 @@ export default class Refresh extends Component {
 		refreshTime: PropTypes.string.isRequired,
 	}
 
+	secondOrSeconds = () => {
+		const { countdown } = this.props;
+		return countdown === 1 ? 'second' : 'seconds';
+	}
+
 	render() {
 		return (
 			<div className={styles.container}>
-				<span className={styles.refresh}>Last refreshed at <span className={styles.time}>{this.props.refreshTime}</span>.</span>
-				<button className={styles.refresh} onClick={this.props.refreshData}>Refresh</button>
+				<span className={styles.refresh}>Last updated at <span className={styles.time}>{this.props.refreshTime}</span>.</span>
+				<span className={styles.refresh}>Auto-updating in <span className={styles.time}>{this.props.countdown}</span> {this.secondOrSeconds()}.</span>
+				<button className={styles.refresh} onClick={this.props.refreshData}>Update</button>
 			</div>
 		);
 	}
