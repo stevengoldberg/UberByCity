@@ -20,7 +20,6 @@ export default class Refresh extends Component {
 			<div className={styles.container}>
 				<span className={styles.refresh}>Last updated at <span className={styles.time}>{this.props.refreshTime}</span>.</span>
 				<span className={styles.refresh}>Auto-updating in <span className={styles.time}>{this.props.countdown}</span> {this.secondOrSeconds()}.</span>
-				<Button onClick={this.props.refreshData} disabled={this.props.loading} label='Update' />
 			</div>
 		);
 	}

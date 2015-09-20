@@ -1,7 +1,6 @@
 @import '../../../styles/main';
 
 :local(.container) {
-	display: inline-block;
 	vertical-align: top;
 	margin: 10px 15px;
 	text-align: left;
@@ -12,7 +11,6 @@
 }
 
 :local(.cityList) {
-	display: inline-block;
 	padding: 0;
 	margin: 0;
 	vertical-align: top;
@@ -61,12 +59,6 @@
 
 :local(select) {
 	margin: 0 10px;
-}
-
-:local(.graph) {
-	width: 100%;
-	max-width: 800px;
-	margin: auto;
 }
 
 :local(i) {

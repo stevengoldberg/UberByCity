@@ -1,38 +1,49 @@
-:local(.outerContainer) {
-	text-align: center;
-	max-width: 95%;
-	margin: auto;
+:local(.controlsContainer) {
+	display: inline-block;
+	margin: 10px 0 0 10px;
+	max-height: 480px;
+	height: 75%;
+	border-right: 1px solid black;
 }
 
 :local(.container) {
-	text-align: center;
-	margin: 20px auto;
+	margin: 10px auto;
 	font-size: 1.2em;
-	display: inline-block;
 	vertical-align: top;
 }
 
+:local(.selectContainer) {
+	margin: 10px 0 0 15px;
+	text-align: center;
+	display: inline-block;
+}
+
+:local(.selectLeft) {
+	composes: selectContainer;
+	margin-right: 40px;
+	margin-left: 5px;
+}
+
 :local(.graph) {
-	width: 95%;
+	width: 75%;
 	height: 60%;
 	max-width: 800px;
 	max-height: 500px;
-	margin: auto;
-}
-
-:local(.selectContainer) {
+	margin-left: 10px;
+	vertical-align: top;
 	display: inline-block;
-	margin: 0 5px;
-}
-
-:local(label) {
-	display: block;
-}
-
-:local(h1) {
-	font-size: 1.9em;
 }
 
 :local(.emphasize) {
 	font-weight: bold;
+}
+
+:local(h4) {
+	margin: 20px 0 10px 30px;
+	max-width: 75%;
+	float: left;
+}
+
+:local(label) {
+	display: block;
 }

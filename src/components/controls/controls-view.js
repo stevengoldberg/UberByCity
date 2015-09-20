@@ -40,7 +40,7 @@ export default class Chart extends Component {
 		});
 
 		this.D3Graph = new D3Graph(this.refs.graph, this.getChartState());
-		//this.timer = setInterval(this.actions.countdownTick, 1000);
+		this.timer = setInterval(this.actions.countdownTick, 1000);
 	}
 
 	componentDidUpdate(prevProps) {
@@ -94,7 +94,7 @@ export default class Chart extends Component {
 
 	buildProductList = () => {
 		return (
-			<div className={styles.selectContainer}>
+			<div className={styles.selectLeft}>
 				<label htmlFor='products'>Product Type</label>
 				<select id='products' ref='productList' onChange={this.onProductChanged} disabled={this.props.loading}>
 					{config.productList.map((product, i) => <option value={product} key={i}>{product}</option>)}
@@ -118,9 +118,15 @@ export default class Chart extends Component {
 		const { compare } = this.props;
 
 		if(compare === 'estimates/time'){
-			return (<h3><span className={styles.emphasize}>How long will it take</span> to get an <span className={styles.emphasize}>{this.props.displayProduct}</span> at the airport?</h3>)
+			return (
+				<h4>
+					<span className={styles.emphasize}>How long will it take</span> to get an <span className={styles.emphasize}>{this.props.displayProduct}</span> at the airport?
+				</h4>)
 		} else if (compare === 'estimates/price') {
-			return (<h3><span className={styles.emphasize}>How much will it cost</span> to take an <span className={styles.emphasize}>{this.props.displayProduct}</span> from the airport to the city center?</h3>);
+			return (
+				<h4>
+					<span className={styles.emphasize}>What will it cost</span> to take an <span className={styles.emphasize}>{this.props.displayProduct}</span> from the airport to the city center?
+				</h4>);
 		}
 	}
 
@@ -140,7 +146,7 @@ export default class Chart extends Component {
 		return (
 			<div>
 				<Header />
-				<div className={styles.outerContainer}>
+				<div className={styles.controlsContainer}>
 					<div className={styles.container}>
 						<CityList
 							cities={this.props.cities}
@@ -154,22 +160,19 @@ export default class Chart extends Component {
 							citiesOnChart={this.props.citiesOnChart}
 						/>
 					</div>
-					<div className={styles.container}>
-						<Refresh 
-							refreshTime={this.props.refreshTime} 
-							refreshData={this.actions.requestData.bind(this, {
-								compare: this.props.compare,
-								cities: this.props.cities,
-							})}
-							countdown={this.props.countdown}
-							loading={this.props.loading}
-						/>
-						{this.buildCompareList()}
+					<div className={styles.selectContainer}>
 						{this.buildProductList()}
+						{this.buildCompareList()}
 					</div>
-					{this.buildHeadline()}
 				</div>
-				<div ref='graph' className={styles.graph}></div>
+				<div ref='graph' className={styles.graph}>
+					{this.buildHeadline()}
+					<Refresh 
+						refreshTime={this.props.refreshTime} 
+						countdown={this.props.countdown}
+						loading={this.props.loading}
+					/>
+				</div>
 			</div>
 		);
 	}

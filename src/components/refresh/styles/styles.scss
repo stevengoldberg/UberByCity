@@ -1,6 +1,7 @@
 :local(.container) {
-	margin: 0 auto 15px;
+	margin: 20px auto 0;
 	vertical-align: top;
+	float: right;
 }
 
 :local(.time) {
@@ -9,5 +10,4 @@
 
 :local(.refresh) {
 	display: block;
-	margin: 5px auto;
 }
