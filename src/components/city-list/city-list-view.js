@@ -43,19 +43,33 @@ export default class CityList extends Component {
 
 	render() {
 		const { cities } = this.props;
+		const inputClass = classnames({
+			[styles.input]: true,
+			'form-control': true,
+			[styles.inputError]: this.props.showError,
+		});
+		const containerClass = classnames({
+			[styles.container]: true,
+			'form-group': true,
+			'has-error': this.props.showError,
+		});
+
 
 		return (
-			<div className={styles.container}>
+			<div className={containerClass}>
 				<form onSubmit={this.handleSubmit}>
 					<input
-						className={this.props.showError ? styles.inputError : styles.input}
+						className={inputClass}
 						ref='cityInput' 
 						placeholder='Add City'
+						type='text'
 					>
 					</input>
 					<Button
 						label='Submit'
 						onClick={this.handleSubmit}
+						disabled={this.props.loading}
+						showError={this.props.showError}
 					/>
 					<Spinner show={this.props.loading}/>
 				</form>
