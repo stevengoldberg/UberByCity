@@ -48,8 +48,8 @@ export function chart(state = initialState, action = {}) {
 
             newErroredCities = _.without(state.erroredCities, city);
 
-            if(_.findWhere(state.cities, {name: city})) {
-                newCities = [].concat({name: city, index: 0}, state.cities);
+            if(!_.findWhere(state.cities, {name: city.name})) {
+                newCities = [].concat({name: city.name, index: 0}, state.cities);
             } else {
                 newCities = state.cities;
             }
@@ -117,6 +117,32 @@ export function chart(state = initialState, action = {}) {
             };
         },
 
+        [appActionTypes.AIRPORTS_LOADED](state, action) {
+            const { data: { city, airports } } = action;
+            const cityIndex = state.cities.indexOf(_.findWhere(state.cities, {name: city}));
+            let newCities = [].concat(state.cities);
+
+
+            if (cityIndex > -1) {
+                newCities[cityIndex] = {
+                    name: city,
+                    airports,
+                    index: 0
+                };
+            } else {
+                newCities = newCities.concat({
+                    name: city,
+                    airports,
+                    index: 0
+                });
+            }
+
+            return {
+                ...state,
+                cities: newCities,
+            };
+        },
+
         [cityActionTypes.REMOVE_CITY_CLICKED](state, action) {
             return {
                 ...state,
@@ -127,7 +153,7 @@ export function chart(state = initialState, action = {}) {
         [cityActionTypes.CITY_REMOVED](state, action) {
             const { data: city } = action;
 
-            const newCities = _.without(state.cities, _.findWhere(state.cities, {city}));
+            const newCities = _.without(state.cities, _.findWhere(state.cities, {name: city}));
             const newGraphData = _.without(state.graphData, _.findWhere(state.graphData, {city}));
 
             return {

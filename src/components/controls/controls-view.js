@@ -3,6 +3,7 @@ import assign from 'object-assign';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as config from 'config';
+import _ from 'underscore';
 
 // Component styles
 import styles from './controls.styles.js';
@@ -74,7 +75,7 @@ export default class Chart extends Component {
 	}
 
 	addCity = (city) => {
-		if(_.findWhere(this.props.cities, {city})) {
+		if(!_.findWhere(this.props.cities, {name: city})) {
 			const cities = [
 				{
 					name: city,

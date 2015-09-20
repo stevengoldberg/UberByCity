@@ -78,7 +78,7 @@ export function requestData(options) {
                     dispatch({
                         type: appActionTypes.AIRPORTS_LOADED,
                         data: {
-                            city,
+                            city: city.name,
                             airports,
                         },
                     });
