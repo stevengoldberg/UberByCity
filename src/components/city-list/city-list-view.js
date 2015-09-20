@@ -75,12 +75,12 @@ export default class CityList extends Component {
 				</form>
 
 				<ul ref='cityList' className={styles.cityList}>
-					{cities.map((city, i) => <li key={i} ref={city}>
-						<span className={this.props.canRemove ? styles.cityListClose : styles['cityListClose-disabled']} onClick={this.handleRemove.bind(this, city)}>
+					{cities.map((city, i) => <li key={i} ref={city.name}>
+						<span className={this.props.canRemove ? styles.cityListClose : styles['cityListClose-disabled']} onClick={this.handleRemove.bind(this, city.name)}>
 							<i className='fa fa-times-circle'></i>
 						</span>
-						<span className={this.getCityClass(city)}>
-							{city}
+						<span className={this.getCityClass(city.name)}>
+							{city.name}
 						</span>
 					</li>)}
 				</ul>

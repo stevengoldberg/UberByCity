@@ -27,16 +27,15 @@ export function requestData(options) {
                          */
 
                         const airportList = result.airports.filter((airport) => {
-                            return airport.city.toLowerCase().indexOf(city.toLowerCase()) > -1;
+                            return airport.city.toLowerCase().indexOf(city.name.toLowerCase()) > -1;
                         });
 
                         return {
-                            name: 'airport',
-                            lat: airportList[0].lat,
-                            lng: airportList[0].lng,
+                            name: 'airports',
+                            data: airportList,
                         };
                     } else {
-                        throw new Error(city);
+                        throw new Error(city.name);
                     }
                 });
 
@@ -56,7 +55,7 @@ export function requestData(options) {
             
             return Promise.all(coordRequests)
                 .then(result => {
-                    const airport = _.findWhere(result, {name: 'airport'});
+                    const airports = _.findWhere(result, {name: 'airports'}).data;
                     const cityCenter = _.findWhere(result, {name: 'cityCenter'});
                     
                     /*
@@ -66,15 +65,23 @@ export function requestData(options) {
 
                     let uberOptions = {
                         type: compare,
-                        start_lat: airport.lat,
-                        start_lng: airport.lng,
+                        start_lat: airports[0].lat,
+                        start_lng: airports[0].lng,
                         cityName: city,
                     };
 
                     if(compare === 'estimates/price') {
                         uberOptions.end_lat = cityCenter.lat;
                         uberOptions.end_lng = cityCenter.lng;
-                    } 
+                    }
+
+                    dispatch({
+                        type: appActionTypes.AIRPORTS_LOADED,
+                        data: {
+                            city,
+                            airports,
+                        },
+                    });
 
                     return uberLookup(uberOptions);
                 })
@@ -128,7 +135,7 @@ function uberLookup({type, start_lat, start_lng, end_lat, end_lng, cityName} = {
 
 function airportLookup(city) {
     return new Promise((resolve, reject) => {
-        $.ajax(`${config.airportURI}/${encodeURIComponent(city)}?user_key=${config.airportToken}`, {
+        $.ajax(`${config.airportURI}/${encodeURIComponent(city.name)}?user_key=${config.airportToken}`, {
             method: 'GET',
             jsonp: 'callback',
             dataType: 'jsonp',
@@ -146,7 +153,7 @@ function airportLookup(city) {
 
 function sendGeocodeRequest(location) {
     return new Promise((resolve, reject) => {
-        $.ajax(`${config.geocodeURI}?address=${location}&key=${config.geocodeToken}`, {
+        $.ajax(`${config.geocodeURI}?address=${location.name}&key=${config.geocodeToken}`, {
             method: 'GET',
             success: (res, status, xhr) => {
                 resolve(res);

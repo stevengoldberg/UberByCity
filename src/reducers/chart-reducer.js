@@ -48,8 +48,8 @@ export function chart(state = initialState, action = {}) {
 
             newErroredCities = _.without(state.erroredCities, city);
 
-            if(state.cities.indexOf(city) === -1) {
-                newCities = [].concat(city, state.cities);
+            if(_.findWhere(state.cities, {name: city})) {
+                newCities = [].concat({name: city, index: 0}, state.cities);
             } else {
                 newCities = state.cities;
             }
@@ -67,7 +67,7 @@ export function chart(state = initialState, action = {}) {
 
                 if(times !== null) {
                     newGraphData[oldIndex] = {
-                        city,
+                        city: city.name,
                         data: {
                             type: 'time',
                             data: times,
@@ -75,7 +75,7 @@ export function chart(state = initialState, action = {}) {
                     };
                 } else {
                     newGraphData[oldIndex] = {
-                        city,
+                        city: city.name,
                         data: {
                             type: 'prices',
                             data: prices,
@@ -87,7 +87,7 @@ export function chart(state = initialState, action = {}) {
                     newGraphData = [
                         ...state.graphData,
                         {
-                            city,
+                            city: city.name,
                             data: {
                                 type: 'time',
                                 data: times,
@@ -98,7 +98,7 @@ export function chart(state = initialState, action = {}) {
                     newGraphData = [
                         ...state.graphData,
                         {
-                            city,
+                            city: city.name,
                             data: {
                                 type: 'prices',
                                 data: prices,
@@ -127,8 +127,8 @@ export function chart(state = initialState, action = {}) {
         [cityActionTypes.CITY_REMOVED](state, action) {
             const { data: city } = action;
 
-            const newCities = _.without(state.cities, city);
-            const newGraphData = _.without(state.graphData, _.findWhere(state.graphData, {city: city}));
+            const newCities = _.without(state.cities, _.findWhere(state.cities, {city}));
+            const newGraphData = _.without(state.graphData, _.findWhere(state.graphData, {city}));
 
             return {
                 ...state,
@@ -141,7 +141,7 @@ export function chart(state = initialState, action = {}) {
         [cityActionTypes.CITY_ADDED](state, action) {
             const { data: city} = action;
 
-            const newCities = [].concat(state.cities, city);
+            const newCities = [].concat(state.cities, {city, index: 0});
 
             return {
                 ...state,
