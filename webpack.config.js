@@ -16,7 +16,7 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.join(__dirname, 'dist'),
-    publicPath: '/UberByCity/dist/'
+    publicPath: '/dist/'
   },
 
   plugins: [

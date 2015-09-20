@@ -13,7 +13,7 @@ const initialState = {
     cityError: false,
     erroredCities: [],
     refreshTime: new Date().toLocaleTimeString(),
-    countdown: 60,
+    countdown: config.countdown,
 };
 
 export function chart(state = initialState, action = {}) {

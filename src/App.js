@@ -5,26 +5,20 @@ import * as reducers from 'reducers';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
 import 'bootstrap-webpack';
-import { Router, Route, Redirect } from 'react-router';
-import createBrowserHistory from 'history/lib/createBrowserHistory';
 import { Controls } from './components/';
 import 'style!./styles/main.scss';
+import * as config from 'config';
 
-const logger = createLogger({collapsed: true});
+const logger = config.debug ? createLogger({collapsed: true}) : () => {};
 const reducersApp = combineReducers(reducers);
 const createStoreWithMiddleware = applyMiddleware(logger, thunkMiddleware)(createStore);
 const store = createStoreWithMiddleware(reducersApp);
-const history = new createBrowserHistory();
 
 export default class App extends Component {
   render() {
     return (
         <Provider store={ store }>
-          <Router history={history}>
-            <Route path="/" component={Controls}></Route>
-            <Redirect from="/UberByCity/" to="/UberByCity" />
-            <Route path="UberByCity" component={Controls}></Route>
-          </Router>
+          <Controls />
         </Provider>
     );
   }
