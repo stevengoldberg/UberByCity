@@ -39,7 +39,7 @@ export default class Chart extends Component {
 		});
 
 		this.D3Graph = new D3Graph(this.refs.graph, this.getChartState());
-		//this.timer = setInterval(this.actions.countdownTick, 1000);
+		this.timer = setInterval(this.actions.countdownTick, 1000);
 	}
 
 	componentDidUpdate(prevProps) {

@@ -116,6 +116,13 @@ export function chart(state = initialState, action = {}) {
             };
         },
 
+        [cityActionTypes.REMOVE_CITY_CLICKED](state, action) {
+            return {
+                ...state,
+                loading: true,
+            };
+        },
+
         [cityActionTypes.CITY_REMOVED](state, action) {
             const { data: city } = action;
 
@@ -126,6 +133,7 @@ export function chart(state = initialState, action = {}) {
                 ...state,
                 graphData: newGraphData,
                 cities: newCities,
+                loading: false,
             };
         },
 
