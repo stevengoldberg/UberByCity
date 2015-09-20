@@ -62,8 +62,6 @@ module.exports = {
     }]
   },
 
-  devtool: '#source-map',
-
   postcss: function() {
     return [autoprefixer, csswring];
   }
