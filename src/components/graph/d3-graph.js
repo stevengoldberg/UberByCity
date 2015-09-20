@@ -56,7 +56,7 @@ export default class D3Graph {
 				transform: `translate(0, ${this.getChartSize().height})`,
 			});
 
-		//this.createYLabel(compare);
+		this.createYLabel(compare);
 
 	}
 	
@@ -83,7 +83,14 @@ export default class D3Graph {
 			.duration(1000)
 			.call(axes.y);
 
-		//this.createYLabel(compare);
+		const axisText = d3.select('.labelText');
+
+		if (compare === 'estimates/price') {
+			axisText.text('USD');
+		} else if (compare === 'estimates/time') {
+			axisText.text('Minutes');
+		}
+
 	}
 
 	updateBars = (displayData) => {
@@ -150,11 +157,20 @@ export default class D3Graph {
 			axisText.text('Minutes');
 		}
 
+		const height = this.getChartSize().height;
+
       	axisText.attr({
 		  	transform: 'rotate(-90)',
 	  	    y: -(this.margin.left / 2) - 5,
-	  	    x: -(d3.select('.y.axis').node().getBBox().height / 2) - (axisText.node().getComputedTextLength() / 2),
+	  	    x: -(height / 2) - (axisText.node().getComputedTextLength() / 2),
 	  	    class: 'labelText',
+	  	    opacity: 0,
+	    })
+	    .transition()
+	    .delay(2000)
+	    .duration(1000)
+	    .attr({
+	    	opacity: 1,
 	    });
 	}
 
@@ -163,10 +179,6 @@ export default class D3Graph {
 			width: this.chart.clientWidth - this.margin.left - this.margin.right,
 			height: this.chart.clientHeight - this.margin.top - this.margin.bottom,
 		};
-	}
-
-	clearChart = () => {
-		d3.selectAll('rect').remove();
 	}
 
 	parseData = (props) => {
@@ -205,6 +217,6 @@ export default class D3Graph {
 	}
 
 	destroy() {
-
+		d3.selectAll('svg').remove();
 	}
 }

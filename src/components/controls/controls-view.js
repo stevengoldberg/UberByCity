@@ -43,8 +43,7 @@ export default class Chart extends Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		if (prevProps.graphData.length !== this.props.graphData.length || prevProps.compare !== this.props.compare ||
-			prevProps.displayProduct !== this.props.displayProduct) {
+		if ((prevProps.loading === true && this.props.loading === false) || prevProps.displayProduct !== this.props.displayProduct) {
 			this.D3Graph.update(this.getChartState());
 		}
 		if(this.props.countdown === 0) {
@@ -70,7 +69,7 @@ export default class Chart extends Component {
 	}
 
 	componentWillUnmount() {
-		//this.D3Graph.destroy(this.refs.graph);
+		this.D3Graph.destroy(this.refs.graph);
 		clearInterval(this.timer);
 	}
 
