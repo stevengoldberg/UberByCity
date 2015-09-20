@@ -111,6 +111,7 @@ export default class D3Graph {
 
 		bars.transition()
 			.duration(1000)
+			.delay((d, i) => i / displayData.length * 500)
 			.attr({
 				x: (d, i) => this.xScale(d.city),
 				y: (d) => this.yScale(d.data),
