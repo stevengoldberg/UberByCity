@@ -24994,8 +24994,7 @@
 	          _reactRouter.Router,
 	          { history: history },
 	          _react2['default'].createElement(_reactRouter.Route, { path: '/', component: _components.Controls }),
-	          _react2['default'].createElement(_reactRouter.Redirect, { from: '/UberByCity/', to: '/UberByCity' }),
-	          _react2['default'].createElement(_reactRouter.Route, { path: 'UberByCity', component: _components.Controls })
+	          _react2['default'].createElement(_reactRouter.Route, { path: 'UberByCity/?', component: _components.Controls })
 	        )
 	      );
 	    }
