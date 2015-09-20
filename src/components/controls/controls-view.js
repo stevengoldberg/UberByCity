@@ -112,9 +112,9 @@ export default class Chart extends Component {
 		const { compare } = this.props;
 
 		if(compare === 'estimates/time'){
-			return (<h1><span className={styles.emphasize}>How long will it take</span> to get an <span className={styles.emphasize}>{this.props.displayProduct}</span> at the airport?</h1>)
+			return (<h3><span className={styles.emphasize}>How long will it take</span> to get an <span className={styles.emphasize}>{this.props.displayProduct}</span> at the airport?</h3>)
 		} else if (compare === 'estimates/price') {
-			return (<h1><span className={styles.emphasize}>How much will it cost</span> to take an <span className={styles.emphasize}>{this.props.displayProduct}</span> from the airport to the city center?</h1>);
+			return (<h3><span className={styles.emphasize}>How much will it cost</span> to take an <span className={styles.emphasize}>{this.props.displayProduct}</span> from the airport to the city center?</h3>);
 		}
 	}
 
