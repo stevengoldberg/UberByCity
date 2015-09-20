@@ -24990,12 +24990,7 @@
 	      return _react2['default'].createElement(
 	        _reactRedux.Provider,
 	        { store: store },
-	        _react2['default'].createElement(
-	          _reactRouter.Router,
-	          { history: history },
-	          _react2['default'].createElement(_reactRouter.Route, { path: '/', component: _components.Controls }),
-	          _react2['default'].createElement(_reactRouter.Route, { path: '/UberByCity/?', component: _components.Controls })
-	        )
+	        _react2['default'].createElement(_components.Controls, null)
 	      );
 	    }
 	  }]);
