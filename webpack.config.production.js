@@ -3,25 +3,21 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var autoprefixer = require('autoprefixer');
 var csswring = require('csswring');
-var path = require('path');
 
 module.exports = {
 
-  entry: [
-    'webpack-dev-server/client?http://localhost:3000',
-    'webpack/hot/only-dev-server',
-    './src/index'
-  ],
+  entry: {
+    app: './src/index.js'
+  },
 
   output: {
     filename: 'bundle.js',
-    path: path.join(__dirname, 'dist'),
+    path: path.join(__dirname, '/dist/'),
     publicPath: '/UberByCity/dist/'
   },
 
   plugins: [
     new ExtractTextPlugin('bundle.css'),
-    new webpack.HotModuleReplacementPlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.NoErrorsPlugin(),
     new webpack.ProvidePlugin({
@@ -58,7 +54,7 @@ module.exports = {
       loader: "url?limit=10000&minetype=image/svg+xml"
     }, {
       test: /\.js$/,
-      loaders: ['react-hot', 'babel-loader?optional[]=runtime&stage=0'],
+      loaders: ['babel-loader?optional[]=runtime&stage=0'],
       exclude: /node_modules/
     }, {
       test: /\.scss$/,

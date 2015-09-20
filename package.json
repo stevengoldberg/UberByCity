@@ -4,6 +4,8 @@
   "description": "Visualising Uber Data",
   "scripts": {
     "start": "NODE_ENV=development node server.js",
+    "build": "NODE_ENV=prod npm run webpack",
+    "webpack": "UV_THREADPOOL_SIZE=100 webpack --config webpack.config.production.js --bail",
     "lint": "eslint src"
   },
   "repository": {
@@ -19,8 +21,8 @@
     "visualization",
     "d3"
   ],
-  "author": "Steve Goldberg",
-  "license": "",
+  "author": "https://github.com/stevengoldberg",
+  "license": "MIT",
   "devDependencies": {
     "autoprefixer": "^6.0.2",
     "babel-core": "^5.4.7",
@@ -43,6 +45,7 @@
     "gulp": "^3.9.0",
     "gulp-rename": "^1.2.2",
     "gulp-template": "^3.0.0",
+    "history": "^1.9.1",
     "imports-loader": "^0.6.4",
     "jquery": "^2.1.4",
     "keymirror": "^0.1.1",
@@ -66,10 +69,5 @@
     "webpack": "^1.9.6",
     "webpack-dev-server": "^1.8.2",
     "yargs": "^3.18.0"
-  },
-  "dependencies": {
-    "brfs": "^1.4.1",
-    "dotenv": "^1.2.0",
-    "transform-loader": "^0.2.3"
   }
 }
