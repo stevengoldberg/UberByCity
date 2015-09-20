@@ -8,10 +8,14 @@ import 'bootstrap-webpack';
 import { Controls } from './components/';
 import 'style!./styles/main.scss';
 import * as config from 'config';
+import { appActionTypes } from 'constants/app-actions';
 
-const logger = config.debug ? createLogger({collapsed: true}) : () => {};
+const logger = createLogger({
+  collapsed: true,
+  predicate: (getState, action) => config.debug && (action.type !== appActionTypes.TIMER_TICK)
+});
 const reducersApp = combineReducers(reducers);
-const createStoreWithMiddleware = applyMiddleware(logger, thunkMiddleware)(createStore);
+const createStoreWithMiddleware = applyMiddleware(thunkMiddleware, logger)(createStore);
 const store = createStoreWithMiddleware(reducersApp);
 
 export default class App extends Component {
