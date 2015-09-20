@@ -39,7 +39,7 @@ export default class Chart extends Component {
 		});
 
 		this.D3Graph = new D3Graph(this.refs.graph, this.getChartState());
-		this.timer = setInterval(this.actions.countdownTick, 1000);
+		//this.timer = setInterval(this.actions.countdownTick, 1000);
 	}
 
 	componentDidUpdate(prevProps) {
@@ -145,6 +145,7 @@ export default class Chart extends Component {
 							showError={this.props.cityError}
 							loading={this.props.loading}
 							canRemove={this.props.cities.length > 1}
+							citiesOnChart={this.props.citiesOnChart}
 						/>
 					</div>
 					<div className={styles.container}>

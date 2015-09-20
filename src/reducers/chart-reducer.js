@@ -12,6 +12,7 @@ const initialState = {
     graphData: [],
     cityError: false,
     erroredCities: [],
+    citiesOnChart: [],
     refreshTime: new Date().toLocaleTimeString(),
     countdown: config.countdown,
 };
@@ -149,8 +150,12 @@ export function chart(state = initialState, action = {}) {
         },
 
         [appActionTypes.ALL_DATA_LOADED](state, action) {
+
+            const citiesOnChart = getCitiesOnChart(state);
+
             return {
                 ...state,
+                citiesOnChart,
                 loading: false,
                 refreshTime: new Date().toLocaleTimeString(),
             };
@@ -176,10 +181,15 @@ export function chart(state = initialState, action = {}) {
 
         [appActionTypes.PRODUCT_CHANGED](state, action) {
             const { data: displayProduct } = action;
-            return {
+            
+            const newState = {
                 ...state,
                 displayProduct,
             };
+
+            const citiesOnChart = getCitiesOnChart(newState);
+
+            return assign({}, newState, {citiesOnChart});
         },
 
         [appActionTypes.UBER_DATA_FAILED](state, action) {
@@ -198,4 +208,21 @@ export function chart(state = initialState, action = {}) {
             };
         },
     });
+}
+
+/*
+ * Returns an array of the cities we currently have data for and which are displayed on the chart
+ * according to the current UI settings.
+ */
+
+function getCitiesOnChart(state) {
+    let citiesOnChart = [];
+    const product = state.displayProduct.toLowerCase();
+    
+    citiesOnChart = state.graphData.map((city) => {
+        let cityProducts = city.data.data.map((cityData) => cityData.display_name.toLowerCase().trim());
+        return cityProducts.indexOf(product) > -1 ? city.city : null;
+    })
+
+    return _.compact(citiesOnChart);
 }

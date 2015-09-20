@@ -37,6 +37,11 @@
 	color: $clr-error;
 }
 
+:local(.cityListItemShown) {
+	composes: cityListItem;
+	font-weight: bold;
+}
+
 :local(.input) {
 	&:focus {
 		outline: none;

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import classnames from 'classnames';
 
 import { Spinner, Button } from '../../components';
 
@@ -31,6 +32,15 @@ export default class CityList extends Component {
 		return this.refs.cityInput.value === '' || this.props.loading;
 	}
 
+	getCityClass = (city) => {
+		return classnames({
+			[styles.cityListItem]: true,
+			[styles.cityListItemError]: this.props.erroredCities.indexOf(city) > -1,
+			[styles.cityListItemShown]: this.props.citiesOnChart.indexOf(city) > -1,
+
+		});
+	}
+
 	render() {
 		const { cities } = this.props;
 
@@ -55,7 +65,7 @@ export default class CityList extends Component {
 						<span className={this.props.canRemove ? styles.cityListClose : styles['cityListClose-disabled']} onClick={this.handleRemove.bind(this, city)}>
 							<i className='fa fa-times-circle'></i>
 						</span>
-						<span className={this.props.erroredCities.indexOf(city) > -1 ? styles.cityListItemError : styles.cityListItem}>
+						<span className={this.getCityClass(city)}>
 							{city}
 						</span>
 					</li>)}
