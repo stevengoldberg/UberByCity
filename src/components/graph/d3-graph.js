@@ -9,64 +9,122 @@ export default class D3Graph {
 		this.chart = el;
 		const width = el.clientWidth;
 		const height = el.clientHeight;
+		const { compare } = props;
 		const displayData = this.parseData(props);
-		this.margin = props.margin;
+		const key = (d) => d.city;
 
-		this.lastData = displayData;
-		this.svg = d3.select(el).append('svg')
+		this.margin = props.margin;
+		this.xScale = d3.scale.ordinal()
+			.rangeRoundBands([0, this.getChartSize().width], 0.05);
+		this.yScale = d3.scale.linear()
+			.range([this.getChartSize().height, 0]);
+
+		const svg = d3.select(el).append('svg')
 			.attr({
 				height,
 				width,
-			})
-		  .append('g')
+			});
+
+		svg.append('defs').append('clipPath')
+			.attr('id', 'chart-area')
+			.append('rect')
+				.attr({
+					height: height,
+					width: width,
+					x: -props.margin.left,
+					y: -props.margin.top - props.margin.bottom,
+				});
+
+		this.svg = svg.append('g')
 		    .attr({
 		    	transform: `translate(${this.margin.left}, ${this.margin.top})`,
+		    	'clip-path': 'url(#chart-area)',
+		    	id: 'bars',
 		    });
+
+		const axes = svg.append('g')
+			.attr({
+				transform: `translate(${this.margin.left}, ${this.margin.top})`,
+			});
+
+		axes.append('g')
+			.attr('class', 'y axis');
+
+		axes.append('g')
+			.attr({
+				class: 'x axis',
+				transform: `translate(0, ${this.getChartSize().height})`,
+			});
+
+		//this.createYLabel(compare);
+
 	}
 	
 	update = (props) => {
 		if (!props) return;
+		
 		const displayData = this.parseData(props);
 		const { compare } = props;
-
-		this.xScale = d3.scale.ordinal()
-			.rangeRoundBands([0, this.getChartSize().width], 0.1);
-		this.yScale = d3.scale.linear()
-			.range([this.getChartSize().height, 0]);
-
-		this.drawBars(displayData);
-		this.drawAxes(displayData, compare);
-		//this.lastData = displayData;
-	}
-
-	drawBars = (displayData) => {
-		const chartSize = this.getChartSize();
 
 		this.yScale.domain([0, d3.max(displayData, (d) => d.data)]);
 		this.xScale.domain(displayData.map((result) => result.city));
 
-		this.clearChart();
+		this.updateBars(displayData);
 
+		const axes = this.createAxes(displayData, compare);
+		
+		d3.select('.x.axis')
+			.transition()
+			.duration(1000)
+			.call(axes.x);
+
+		d3.select('.y.axis')
+			.transition()
+			.duration(1000)
+			.call(axes.y);
+
+		//this.createYLabel(compare);
+	}
+
+	updateBars = (displayData) => {
+		const chartSize = this.getChartSize();
+		const key = (d) => d.city;
 		const bars = this.svg.selectAll('rect')
-			.data(displayData)
-			.enter()
+			.data(displayData, key);
+
+		bars.enter()
 			.append('rect')
 			.attr({
 				class: 'bar',
 				x: (d, i) => this.xScale(d.city),
+				y: (d) => chartSize.height,
+				width: this.xScale.rangeBand(),
+				height: 0,
+			});
+
+		bars.transition()
+			.duration(1000)
+			.attr({
+				x: (d, i) => this.xScale(d.city),
 				y: (d) => this.yScale(d.data),
 				width: this.xScale.rangeBand(),
 				height: (d) => chartSize.height - this.yScale(d.data),
-				fill: 'black',
 			});
+
+		bars.exit()
+			.transition()
+			.duration(1000)
+			.attr({
+				height: 0,
+				y: (d) => chartSize.height,
+			})
+			.remove();
 	}
 
-	drawAxes = (displayData, compare) => {
-		d3.selectAll('.axis').remove();
+	createAxes = (displayData, compare) => {
 		const xAxis = d3.svg.axis().scale(this.xScale).orient('bottom');
 		const formatTime = d3.time.format('%M');
 		const formatMinutes = (d) => formatTime(new Date(2012, 0, 1, 0, d));
-
 
 		let yAxis;
 		if (compare === 'estimates/price') {
@@ -74,12 +132,17 @@ export default class D3Graph {
 		} else if (compare === 'estimates/time') {
 			yAxis = d3.svg.axis().scale(this.yScale).orient('left').tickFormat(formatMinutes);
 		}
-		this.svg.append('g')
-			.attr('class', 'y axis')
-			.call(yAxis);
 
+	    return {
+	    	x: xAxis,
+	    	y: yAxis,
+	    };
+
+	}
+
+	createYLabel = (compare) => {
 		let axisText = d3.select('.y.axis')
-			    .append('text');
+			.append('text');
 
 		if (compare === 'estimates/price') {
 			axisText.text('USD');
@@ -93,13 +156,6 @@ export default class D3Graph {
 	  	    x: -(d3.select('.y.axis').node().getBBox().height / 2) - (axisText.node().getComputedTextLength() / 2),
 	  	    class: 'labelText',
 	    });
-
-		this.svg.append('g')
-			.attr({
-				class: 'x axis',
-				transform: `translate(0, ${this.getChartSize().height})`,
-			})
-			.call(xAxis);
 	}
 
 	getChartSize = () => {

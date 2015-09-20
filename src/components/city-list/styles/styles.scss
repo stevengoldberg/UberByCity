@@ -17,7 +17,6 @@
 }
 
 :local(.cityListClose) {
-	font-weight: bold;
 	cursor: pointer;
 	margin-right: 5px;
 	vertical-align: top;
@@ -57,4 +56,8 @@
 	width: 100%;
 	max-width: 800px;
 	margin: auto;
+}
+
+:local(i) {
+	vertical-align: middle !important; // font-awesome override
 }

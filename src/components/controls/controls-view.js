@@ -39,13 +39,12 @@ export default class Chart extends Component {
 		});
 
 		this.D3Graph = new D3Graph(this.refs.graph, this.getChartState());
-		this.timer = setInterval(this.actions.countdownTick, 1000);
+		//this.timer = setInterval(this.actions.countdownTick, 1000);
 	}
 
 	componentDidUpdate(prevProps) {
 		if (prevProps.graphData.length !== this.props.graphData.length || prevProps.compare !== this.props.compare ||
 			prevProps.displayProduct !== this.props.displayProduct) {
-			this.D3Graph.clearChart();
 			this.D3Graph.update(this.getChartState());
 		}
 		if(this.props.countdown === 0) {

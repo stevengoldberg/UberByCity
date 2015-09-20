@@ -53,7 +53,7 @@ export default class CityList extends Component {
 				<ul ref='cityList' className={styles.cityList}>
 					{cities.map((city, i) => <li key={i} ref={city}>
 						<span className={this.props.canRemove ? styles.cityListClose : styles['cityListClose-disabled']} onClick={this.handleRemove.bind(this, city)}>
-							x
+							<i className='fa fa-times-circle'></i>
 						</span>
 						<span className={this.props.erroredCities.indexOf(city) > -1 ? styles.cityListItemError : styles.cityListItem}>
 							{city}
