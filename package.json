@@ -6,6 +6,7 @@
     "start": "NODE_ENV=development node server.js",
     "build": "NODE_ENV=production npm run webpack",
     "webpack": "UV_THREADPOOL_SIZE=100 webpack --config webpack.config.production.js --bail",
+    "clean": "find dist/* -print0 | xargs -0 rm -rfv",
     "lint": "eslint src"
   },
   "repository": {
