@@ -60,4 +60,4 @@ ios
 .babelrc
 npm-debug.log
 .env
-config/*
+config/*.js

@@ -1,0 +1,61 @@
+module.exports = {
+	uberURI:`https://sandbox-api.uber.com/v1`,
+	uberToken: `SECRET`,
+	airportToken: `SECRET`,
+	airportURI:`https://airport.api.aero/airport/match`,
+	geocodeURI:`https://maps.googleapis.com/maps/api/geocode/json`,
+	geocodeToken: `SECRET`,
+	initialLocations: [
+		{
+			name: 'San Francisco',
+			index: 0,
+		},
+		{
+			name: 'Los Angeles',
+			index: 0,
+		},
+		{
+			name: 'San Diego',
+			index: 0,
+		},
+		{
+			name: 'Seattle',
+			index: 0,
+		},
+		{
+			name: 'Pittsburgh',
+			index: 0,
+		},
+		{
+			name: 'Philadelphia',
+			index: 0,
+		},
+		{
+			name: 'New York',
+			index: 0,
+		},
+		{
+			name: 'Boston',
+			index: 0,
+		},
+	],
+	productList: [
+		'uberBlack',
+		'uberX',
+		'uberXL',
+		'uberSUV',
+		'uberFamily',
+	],
+	comparisonList: [
+		{
+			name: 'Price',
+			value: 'estimates/price',
+		},
+		{
+			name: 'ETA',
+			value: 'estimates/time',
+		}
+	],
+	debug: true,
+	countdown: 1000,
+};
