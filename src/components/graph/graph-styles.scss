@@ -3,8 +3,11 @@
   stroke: black;
 }
 
-.bar:hover {
-  fill: brown;
+.multi {
+  cursor: pointer;
+  &:hover {
+    fill: brown;
+  }
 }
 
 .axis {
@@ -27,4 +30,8 @@
 
 .labelText {
   font: 13px sans-serif;
+}
+
+.airportCode {
+  pointer-events: none;
 }

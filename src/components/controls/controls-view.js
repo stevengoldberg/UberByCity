@@ -38,7 +38,7 @@ export default class Chart extends Component {
 			cities: this.props.cities,
 		});
 
-		this.D3Graph = new D3Graph(this.refs.graph, this.getChartState());
+		this.D3Graph = new D3Graph(this.refs.graph, this.getChartState(), this.requestNewAirport);
 		this.timer = setInterval(this.actions.countdownTick, 1000);
 	}
 
@@ -52,6 +52,17 @@ export default class Chart extends Component {
 				cities: this.props.cities,
 			});
 		}
+	}
+
+	requestNewAirport = (city) => {
+		const newCities = [].concat(this.props.cities);
+		const currentCity = _.findWhere(newCities, {name: city});
+		currentCity.index = (currentCity.index + 1) % currentCity.airports.length;
+
+		this.actions.requestData({
+			cities: [currentCity],
+			compare: this.props.compare,
+		});
 	}
 
 	getChartState() {

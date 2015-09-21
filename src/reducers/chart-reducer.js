@@ -55,10 +55,17 @@ export function chart(state = initialState, action = {}) {
 
             newErroredCities = _.without(state.erroredCities, city);
 
+            /*
+             * If the city doesn't exist, add it to the list and initialize the airport index to 0.
+             * If it is in the list, replace the old list item with the new one.
+             */
+
             if(!_.findWhere(state.cities, {name: city.name})) {
-                newCities = [].concat({name: city.name, index: 0}, state.cities);
+                newCities = [].concat({name: city.name, index: 0, airports: airportsForCity}, state.cities);
             } else {
-                newCities = state.cities;
+                newCities = [].concat(state.cities);
+                const oldIndex = newCities.indexOf(_.findWhere(newCities, {name: city.name}));
+                newCities[oldIndex] = {name: city.name, index: city.index, airports: airportsForCity};
             }
 
             /*
@@ -66,7 +73,7 @@ export function chart(state = initialState, action = {}) {
              * or replace the previous entry in the array for that city if it already existed
              */
 
-            oldIndex = state.graphData.indexOf(_.findWhere(state.graphData, {city}));
+            oldIndex = state.graphData.indexOf(_.findWhere(state.graphData, {city: city.name}));
             
             if (oldIndex > -1) {
 

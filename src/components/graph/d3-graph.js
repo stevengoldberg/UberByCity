@@ -1,12 +1,15 @@
 import d3 from 'd3';
 import _ from 'underscore';
+import classnames from 'classnames';
 
 import 'style!./graph-styles.scss';
 
 export default class D3Graph {
 
-	constructor(el, props = {}) {
+	constructor(el, props = {}, requestNewAirport) {
 		this.chart = el;
+		this.requestNewAirport = requestNewAirport;
+
 		const width = el.clientWidth;
 		const height = el.clientHeight;
 		const { compare } = props;
@@ -91,7 +94,13 @@ export default class D3Graph {
 		} else if (compare === 'estimates/time') {
 			axisText.text('Minutes');
 		}
+	}
 
+	classNameForBar = (graphData) => {
+		return classnames({
+			bar: true,
+			multi: graphData.multiAirport,
+		});
 	}
 
 	updateBars = (displayData) => {
@@ -103,12 +112,13 @@ export default class D3Graph {
 		bars.enter()
 			.append('rect')
 			.attr({
-				class: 'bar',
+				class: (d) => this.classNameForBar(d),
 				x: (d, i) => this.xScale(d.city),
 				y: (d) => chartSize.height,
 				width: this.xScale.rangeBand(),
 				height: 0,
-			});
+			})
+			.on('click', (d) => d.multiAirport ? this.requestNewAirport(d.city) : null, false);
 
 		bars.transition()
 			.duration(1000)
@@ -141,6 +151,7 @@ export default class D3Graph {
 			.text((d) => d.airportCode + (d.multiAirport ? ' (+)' : ''))
 			.attr({
 				'text-anchor': 'middle',
+				class: 'airportCode',
 				x: (d, i) => this.xScale(d.city) + this.xScale.rangeBand() / 2,
 				y: (d) => chartSize.height + 25,
 				'font-family': 'sans-serif',
@@ -154,13 +165,14 @@ export default class D3Graph {
 			.attr({
 				y: (d) => this.yScale(d.data) + 25,
 				x: (d, i) => this.xScale(d.city) + this.xScale.rangeBand() / 2,
-			});
+			})
+			.text((d) => d.airportCode + (d.multiAirport ? ' (+)' : ''));
 
 		labels.exit()
 			.transition()
 			.duration(1000)
 			.attr({
-				y: (d) => chartSize.height,
+				y: (d) => chartSize.height + 25,
 			})
 			.remove();
 
