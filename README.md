@@ -14,3 +14,4 @@ This project was built with React, Redux, d3, and webpack, based on the [redux-e
 
 * Handle non-USD currency
 * Allow cycling through multiple airports per city
+* Make it good on mobile
