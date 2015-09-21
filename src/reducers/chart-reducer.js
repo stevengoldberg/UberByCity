@@ -45,6 +45,7 @@ export function chart(state = initialState, action = {}) {
             let newCities = [];
             let newErroredCities;
             let oldIndex;
+            let airport = _.findWhere(state.cities, {name: city.name}).airports[city.index];
 
             newErroredCities = _.without(state.erroredCities, city);
 
@@ -71,6 +72,7 @@ export function chart(state = initialState, action = {}) {
                         data: {
                             type: 'time',
                             data: times,
+                            airport,
                         },
                     };
                 } else {
@@ -79,6 +81,7 @@ export function chart(state = initialState, action = {}) {
                         data: {
                             type: 'prices',
                             data: prices,
+                            airport,
                         },
                     };
                 }
@@ -91,6 +94,7 @@ export function chart(state = initialState, action = {}) {
                             data: {
                                 type: 'time',
                                 data: times,
+                                airport,
                             },
                         },
                     ];
@@ -102,6 +106,7 @@ export function chart(state = initialState, action = {}) {
                             data: {
                                 type: 'prices',
                                 data: prices,
+                                airport,
                             },
                         },
                     ];

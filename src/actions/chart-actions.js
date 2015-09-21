@@ -41,6 +41,11 @@ export function requestData(options) {
 
             const cityCenter = sendGeocodeRequest(city)
                 .then(result => {
+
+                    /*
+                     * The geocoding endpoint returns the most likely match as the first index in the results.
+                     */
+
                     return {
                         name: 'cityCenter',
                         lat: result.results[0].geometry.location.lat,
@@ -60,14 +65,15 @@ export function requestData(options) {
                     
                     /*
                      * The Uber price estimate endpoint takes a start and end location;
-                     * the ETA endpoint just takes one location.
+                     * the ETA endpoint just takes one location. We start from the airport at the
+                     * current city object's index.
                      */
 
                     let uberOptions = {
                         type: compare,
-                        start_lat: airports[0].lat,
-                        start_lng: airports[0].lng,
-                        cityName: city,
+                        start_lat: airports[city.index].lat,
+                        start_lng: airports[city.index].lng,
+                        cityName: city.name,
                     };
 
                     if(compare === 'estimates/price') {

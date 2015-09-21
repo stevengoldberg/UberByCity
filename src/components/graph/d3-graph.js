@@ -160,9 +160,9 @@ export default class D3Graph {
 
 		const height = this.getChartSize().height;
 
-      	axisText.attr({
-		  	transform: 'rotate(-90)',
-	  	    y: -(this.margin.left / 2) - 5,
+    	axisText.attr({
+			transform: 'rotate(-90)',
+	  		y: -(this.margin.left / 2) - 5,
 	  	    x: -(height / 2) - (axisText.node().getComputedTextLength() / 2),
 	  	    class: 'labelText',
 	  	    opacity: 0,

@@ -36,7 +36,6 @@ export default class Chart extends Component {
 		this.actions.requestData({
 			compare: this.props.compare,
 			cities: this.props.cities,
-
 		});
 
 		this.D3Graph = new D3Graph(this.refs.graph, this.getChartState());
