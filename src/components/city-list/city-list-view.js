@@ -54,14 +54,13 @@ export default class CityList extends Component {
 			'has-error': this.props.showError,
 		});
 
-
 		return (
 			<div className={containerClass}>
 				<form onSubmit={this.handleSubmit}>
 					<input
 						className={inputClass}
 						ref='cityInput' 
-						placeholder='Add City'
+						placeholder='Enter City Name'
 						type='text'
 					>
 					</input>

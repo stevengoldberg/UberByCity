@@ -24,6 +24,10 @@ export function chart(state = initialState, action = {}) {
             let newGraphData;
             let newCountdown;
 
+            /*
+             * When 'reset' is passed because e.g. the comparison has changed, start the graph with a clean slate.
+             */
+
             if(reset === 'graph') {
                 newGraphData = [];
             } else {
@@ -45,7 +49,9 @@ export function chart(state = initialState, action = {}) {
             let newCities = [];
             let newErroredCities;
             let oldIndex;
-            let airport = _.findWhere(state.cities, {name: city.name}).airports[city.index];
+            const airportsForCity = _.findWhere(state.cities, {name: city.name}).airports;
+            const currentAirport = airportsForCity[city.index];
+            const multiAirport = airportsForCity.length > 1;
 
             newErroredCities = _.without(state.erroredCities, city);
 
@@ -72,7 +78,8 @@ export function chart(state = initialState, action = {}) {
                         data: {
                             type: 'time',
                             data: times,
-                            airport,
+                            currentAirport,
+                            multiAirport,
                         },
                     };
                 } else {
@@ -81,7 +88,8 @@ export function chart(state = initialState, action = {}) {
                         data: {
                             type: 'prices',
                             data: prices,
-                            airport,
+                            currentAirport,
+                            multiAirport,
                         },
                     };
                 }
@@ -94,7 +102,8 @@ export function chart(state = initialState, action = {}) {
                             data: {
                                 type: 'time',
                                 data: times,
-                                airport,
+                                currentAirport,
+                                multiAirport,
                             },
                         },
                     ];
@@ -106,7 +115,8 @@ export function chart(state = initialState, action = {}) {
                             data: {
                                 type: 'prices',
                                 data: prices,
-                                airport,
+                                currentAirport,
+                                multiAirport,
                             },
                         },
                     ];

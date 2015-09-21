@@ -138,7 +138,7 @@ export default class D3Graph {
 
 		labels.enter()
 			.append('text')
-			.text((d) => d.airportCode)
+			.text((d) => d.airportCode + (d.multiAirport ? ' (+)' : ''))
 			.attr({
 				'text-anchor': 'middle',
 				x: (d, i) => this.xScale(d.city) + this.xScale.rangeBand() / 2,
@@ -235,7 +235,8 @@ export default class D3Graph {
 			}
 
 			current.city = cityObject.city;
-			current.airportCode = cityObject.data.airport.code;
+			current.airportCode = cityObject.data.currentAirport.code;
+			current.multiAirport = cityObject.data.multiAirport;
 			
 			if (current.data) {
 				currentData.push(current);
