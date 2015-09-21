@@ -3,7 +3,7 @@ Uber By City
 
 [Check out UberByCity live here](https://resistorsings.com/UberByCity).
 
-This tool charts either the current price of an Uber trip from the airport to the center of the city, or the current wait time to get an Uber at the airport. You can add and remove cities to the chart.
+This tool charts either the current price of an Uber trip from the airport to the center of the city, or the current wait time to get an Uber at the airport. You can add and remove cities to the chart with the controls on the left. If a city name is associated with more than one airport, click the bar to cycle through the airports.
 
 
 ## Technology
