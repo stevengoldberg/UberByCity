@@ -14918,7 +14918,7 @@
 			value: 'estimates/time'
 		}],
 		debug: false,
-		countdown: 30
+		countdown: 60
 	};
 
 /***/ },
