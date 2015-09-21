@@ -70,6 +70,7 @@ export default class D3Graph {
 		this.xScale.domain(displayData.map((result) => result.city));
 
 		this.updateBars(displayData);
+		this.updateLabels(displayData);
 
 		const axes = this.createAxes(displayData, compare);
 		
@@ -127,6 +128,42 @@ export default class D3Graph {
 				y: (d) => chartSize.height,
 			})
 			.remove();
+	}
+
+	updateLabels = (displayData) => {
+		const chartSize = this.getChartSize();
+		const key = (d) => d.city;
+		const labels = this.svg.selectAll('text')
+			.data(displayData, key);
+
+		labels.enter()
+			.append('text')
+			.text((d) => d.airportCode)
+			.attr({
+				'text-anchor': 'middle',
+				x: (d, i) => this.xScale(d.city) + this.xScale.rangeBand() / 2,
+				y: (d) => chartSize.height + 25,
+				'font-family': 'sans-serif',
+				'font-size': '13px',
+				'fill': 'white',
+			});
+
+		labels.transition()
+			.duration(1000)
+			.delay((d, i) => i / displayData.length * 500)
+			.attr({
+				y: (d) => this.yScale(d.data) + 25,
+				x: (d, i) => this.xScale(d.city) + this.xScale.rangeBand() / 2,
+			});
+
+		labels.exit()
+			.transition()
+			.duration(1000)
+			.attr({
+				y: (d) => chartSize.height,
+			})
+			.remove();
+
 	}
 
 	createAxes = (displayData, compare) => {
@@ -198,6 +235,7 @@ export default class D3Graph {
 			}
 
 			current.city = cityObject.city;
+			current.airportCode = cityObject.data.airport.code;
 			
 			if (current.data) {
 				currentData.push(current);
