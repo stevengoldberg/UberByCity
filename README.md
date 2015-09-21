@@ -16,5 +16,6 @@ To run the code locally, you'll have to register for API keys with the 3 service
 
 ### To-do
 
+* Better city specification
 * Handle non-USD currency
 * Make it good on mobile
