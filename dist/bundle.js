@@ -14884,7 +14884,31 @@
 		airportURI: 'https://airport.api.aero/airport/match',
 		geocodeURI: 'https://maps.googleapis.com/maps/api/geocode/json',
 		geocodeToken: 'AIzaSyADQ6tDzgx4HA4JbNFtffHqVlWpI1_p3ws',
-		initialLocations: ['San Francisco', 'Los Angeles', 'San Diego', 'Seattle', 'Pittsburgh', 'Philadelphia', 'New York', 'Boston'],
+		initialLocations: [{
+			name: 'San Francisco',
+			index: 0
+		}, {
+			name: 'Los Angeles',
+			index: 0
+		}, {
+			name: 'San Diego',
+			index: 0
+		}, {
+			name: 'Seattle',
+			index: 0
+		}, {
+			name: 'Pittsburgh',
+			index: 0
+		}, {
+			name: 'Philadelphia',
+			index: 0
+		}, {
+			name: 'New York',
+			index: 0
+		}, {
+			name: 'Boston',
+			index: 0
+		}],
 		productList: ['uberBlack', 'uberX', 'uberXL', 'uberSUV', 'uberFamily'],
 		comparisonList: [{
 			name: 'Price',
