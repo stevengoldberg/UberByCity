@@ -140,21 +140,30 @@ function uberLookup({type, start_lat, start_lng, end_lat, end_lng, cityName} = {
 
 
 function airportLookup(city) {
-    return new Promise((resolve, reject) => {
-        $.ajax(`${config.airportURI}/${encodeURIComponent(city.name)}?user_key=${config.airportToken}`, {
-            method: 'GET',
-            jsonp: 'callback',
-            dataType: 'jsonp',
-            success: (res, status, xhr) => {
-                resolve(res);
-            },
+    let cachedAirports = localStorage.getItem(`airport_${city.name}`);
 
-            error: (xhr, status, error) => {
-                reject({message: city});
-            },
+    if(cachedAirports) {
+        cachedAirports = JSON.parse(cachedAirports);
+        return Promise.resolve(cachedAirports);
+    } else {
+        return new Promise((resolve, reject) => {
+            $.ajax(`${config.airportURI}/${encodeURIComponent(city.name)}?user_key=${config.airportToken}`, {
+                method: 'GET',
+                jsonp: 'callback',
+                dataType: 'jsonp',
+                success: (res, status, xhr) => {
+                    localStorage.setItem(`airport_${city.name}`, JSON.stringify(res));
+                    resolve(res);
+                },
 
+                error: (xhr, status, error) => {
+                    reject({message: city});
+                },
+
+            });
         });
-    });
+    }
+    
 }
 
 function sendGeocodeRequest(location) {
