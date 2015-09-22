@@ -23383,7 +23383,7 @@
 
 	    if (cachedUber) {
 	        cachedUber = JSON.parse(cachedUber);
-	        if (Date.now() - cachedUber.timestamp / 1000 > 60) {
+	        if (Date.now() - cachedUber.timestamp / 1000 < 60) {
 	            return _Promise.resolve(cachedUber);
 	        }
 	    } else {
