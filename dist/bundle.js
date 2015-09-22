@@ -25961,7 +25961,7 @@
 
 
 	// module
-	exports.push([module.id, ".bar{fill:steelblue;stroke:black}.multi{cursor:pointer}.multi:hover{fill:brown}.axis{font:11px sans-serif}.axis text{stroke:black}.axis path,.axis line{fill:none;shape-rendering:crispEdges}.x.axis path{display:none}.labelText{font:13px sans-serif}.airportCode{pointer-events:none}", ""]);
+	exports.push([module.id, ".bar{fill:steelblue;stroke:black}.multi{cursor:pointer}.multi:hover{fill:brown}.axis{font:11px sans-serif}.axis path,.axis line{fill:none;stroke:black;shape-rendering:crispEdges}.x.axis path{display:none}.labelText{font:13px sans-serif}.airportCode{pointer-events:none}", ""]);
 
 	// exports
 
