@@ -120,7 +120,7 @@ export function changeComparison(data) {
 }
 
 function uberLookup({type, start_lat, start_lng, end_lat, end_lng, cityName} = {}) {
-    let cachedUber = localStorage.getItem(`uber_${cityName}_${type}`);
+    let cachedUber = localStorage.getItem(`uber_${cityName}_${type}_${start_lat}`);
 
     if(cachedUber) {
         cachedUber = JSON.parse(cachedUber);
@@ -135,7 +135,7 @@ function uberLookup({type, start_lat, start_lng, end_lat, end_lng, cityName} = {
                     Authorization: `Token ${config.uberToken}`,
                 },
                 success: (res, status, xhr) => {
-                    localStorage.setItem(`uber_${cityName}_${type}`, JSON.stringify(assign({}, res, {timestamp: Date.now()})));
+                    localStorage.setItem(`uber_${cityName}_${type}_${start_lat}`, JSON.stringify(assign({}, res, {timestamp: Date.now()})));
                     resolve(res);
                 },
 
