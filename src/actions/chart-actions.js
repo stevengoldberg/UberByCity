@@ -120,22 +120,32 @@ export function changeComparison(data) {
 }
 
 function uberLookup({type, start_lat, start_lng, end_lat, end_lng, cityName} = {}) {
-    return new Promise((resolve, reject) => {
-        $.ajax(`${config.uberURI}/${type}?start_latitude=${start_lat}&start_longitude=${start_lng}&end_latitude=${end_lat}&end_longitude=${end_lng}`, {
-            method: 'GET',
-            headers: {
-                Authorization: `Token ${config.uberToken}`,
-            },
-            success: (res, status, xhr) => {
-                resolve(res);
-            },
+    let cachedUber = localStorage.getItem(`uber_${cityName}_${type}`);
 
-            error: (xhr, status, error) => {
-                reject({message: cityName});
-            },
+    if(cachedUber) {
+        cachedUber = JSON.parse(cachedUber);
+        if(Date.now() - cachedUber.timestamp / 1000 > 60) {
+            return Promise.resolve(cachedUber);
+        }
+    } else {
+        return new Promise((resolve, reject) => {
+            $.ajax(`${config.uberURI}/${type}?start_latitude=${start_lat}&start_longitude=${start_lng}&end_latitude=${end_lat}&end_longitude=${end_lng}`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `Token ${config.uberToken}`,
+                },
+                success: (res, status, xhr) => {
+                    localStorage.setItem(`uber_${cityName}_${type}`, JSON.stringify(assign({}, res, {timestamp: Date.now()})));
+                    resolve(res);
+                },
 
+                error: (xhr, status, error) => {
+                    reject({message: cityName});
+                },
+
+            });
         });
-    })
+    }
 }
 
 
