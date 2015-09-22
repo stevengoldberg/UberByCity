@@ -167,19 +167,27 @@ function airportLookup(city) {
 }
 
 function sendGeocodeRequest(location) {
-    return new Promise((resolve, reject) => {
-        $.ajax(`${config.geocodeURI}?address=${location.name}&key=${config.geocodeToken}`, {
-            method: 'GET',
-            success: (res, status, xhr) => {
-                resolve(res);
-            },
+    let cachedGeocode = localStorage.getItem(`geocode_${location.name}`);
 
-            error: (xhr, status, error) => {
-                reject(error);
-            },
+    if(cachedGeocode) {
+        cachedGeocode = JSON.parse(cachedGeocode);
+        return Promise.resolve(cachedGeocode);
+    } else {
+        return new Promise((resolve, reject) => {
+            $.ajax(`${config.geocodeURI}?address=${location.name}&key=${config.geocodeToken}`, {
+                method: 'GET',
+                success: (res, status, xhr) => {
+                    localStorage.setItem(`geocode_${location.name}`, JSON.stringify(res));
+                    resolve(res);
+                },
 
+                error: (xhr, status, error) => {
+                    reject(error);
+                },
+
+            });
         });
-    });
+    }
 }
 
 function allDataLoaded() {
