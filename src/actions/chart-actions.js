@@ -120,13 +120,11 @@ export function changeComparison(data) {
 }
 
 function uberLookup({type, start_lat, start_lng, end_lat, end_lng, cityName} = {}) {
-    let cachedUber = localStorage.getItem(`uber_${cityName}_${type}_${start_lat}`);
+    let cachedUber = localStorage.getItem(`uber_${cityName}_${type}_${start_lat}`) || null;
+    cachedUber = JSON.parse(cachedUber);
 
-    if(cachedUber) {
-        cachedUber = JSON.parse(cachedUber);
-        if(Date.now() - cachedUber.timestamp / 1000 < 60) {
-            return Promise.resolve(cachedUber);
-        }
+    if(cachedUber && ((Date.now() - cachedUber.timestamp) / 1000 < 60)) {
+        return Promise.resolve(cachedUber);
     } else {
         return new Promise((resolve, reject) => {
             $.ajax(`${config.uberURI}/${type}?start_latitude=${start_lat}&start_longitude=${start_lng}&end_latitude=${end_lat}&end_longitude=${end_lng}`, {
