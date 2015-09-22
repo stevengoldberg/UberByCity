@@ -23379,13 +23379,11 @@
 	    var end_lng = _ref.end_lng;
 	    var cityName = _ref.cityName;
 
-	    var cachedUber = localStorage.getItem('uber_' + cityName + '_' + type + '_' + start_lat);
+	    var cachedUber = localStorage.getItem('uber_' + cityName + '_' + type + '_' + start_lat) || null;
+	    cachedUber = JSON.parse(cachedUber);
 
-	    if (cachedUber) {
-	        cachedUber = JSON.parse(cachedUber);
-	        if (Date.now() - cachedUber.timestamp / 1000 < 60) {
-	            return _Promise.resolve(cachedUber);
-	        }
+	    if (cachedUber && (Date.now() - cachedUber.timestamp) / 1000 < 60) {
+	        return _Promise.resolve(cachedUber);
 	    } else {
 	        return new _Promise(function (resolve, reject) {
 	            _jquery2['default'].ajax(config.uberURI + '/' + type + '?start_latitude=' + start_lat + '&start_longitude=' + start_lng + '&end_latitude=' + end_lat + '&end_longitude=' + end_lng, {
