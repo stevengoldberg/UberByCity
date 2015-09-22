@@ -23379,56 +23379,82 @@
 	    var end_lng = _ref.end_lng;
 	    var cityName = _ref.cityName;
 
-	    return new _Promise(function (resolve, reject) {
-	        _jquery2['default'].ajax(config.uberURI + '/' + type + '?start_latitude=' + start_lat + '&start_longitude=' + start_lng + '&end_latitude=' + end_lat + '&end_longitude=' + end_lng, {
-	            method: 'GET',
-	            headers: {
-	                Authorization: 'Token ' + config.uberToken
-	            },
-	            success: function success(res, status, xhr) {
-	                resolve(res);
-	            },
+	    var cachedUber = localStorage.getItem('uber_' + cityName + '_' + type);
 
-	            error: function error(xhr, status, _error) {
-	                reject({ message: cityName });
-	            }
+	    if (cachedUber) {
+	        cachedUber = JSON.parse(cachedUber);
+	        if (Date.now() - cachedUber.timestamp / 1000 > 60) {
+	            return _Promise.resolve(cachedUber);
+	        }
+	    } else {
+	        return new _Promise(function (resolve, reject) {
+	            _jquery2['default'].ajax(config.uberURI + '/' + type + '?start_latitude=' + start_lat + '&start_longitude=' + start_lng + '&end_latitude=' + end_lat + '&end_longitude=' + end_lng, {
+	                method: 'GET',
+	                headers: {
+	                    Authorization: 'Token ' + config.uberToken
+	                },
+	                success: function success(res, status, xhr) {
+	                    localStorage.setItem('uber_' + cityName + '_' + type, JSON.stringify((0, _objectAssign2['default'])({}, res, { timestamp: Date.now() })));
+	                    resolve(res);
+	                },
 
+	                error: function error(xhr, status, _error) {
+	                    reject({ message: cityName });
+	                }
+
+	            });
 	        });
-	    });
+	    }
 	}
 
 	function airportLookup(city) {
-	    return new _Promise(function (resolve, reject) {
-	        _jquery2['default'].ajax(config.airportURI + '/' + encodeURIComponent(city.name) + '?user_key=' + config.airportToken, {
-	            method: 'GET',
-	            jsonp: 'callback',
-	            dataType: 'jsonp',
-	            success: function success(res, status, xhr) {
-	                resolve(res);
-	            },
+	    var cachedAirports = localStorage.getItem('airport_' + city.name);
 
-	            error: function error(xhr, status, _error2) {
-	                reject({ message: city });
-	            }
+	    if (cachedAirports) {
+	        cachedAirports = JSON.parse(cachedAirports);
+	        return _Promise.resolve(cachedAirports);
+	    } else {
+	        return new _Promise(function (resolve, reject) {
+	            _jquery2['default'].ajax(config.airportURI + '/' + encodeURIComponent(city.name) + '?user_key=' + config.airportToken, {
+	                method: 'GET',
+	                jsonp: 'callback',
+	                dataType: 'jsonp',
+	                success: function success(res, status, xhr) {
+	                    localStorage.setItem('airport_' + city.name, JSON.stringify(res));
+	                    resolve(res);
+	                },
 
+	                error: function error(xhr, status, _error2) {
+	                    reject({ message: city });
+	                }
+
+	            });
 	        });
-	    });
+	    }
 	}
 
 	function sendGeocodeRequest(location) {
-	    return new _Promise(function (resolve, reject) {
-	        _jquery2['default'].ajax(config.geocodeURI + '?address=' + location.name + '&key=' + config.geocodeToken, {
-	            method: 'GET',
-	            success: function success(res, status, xhr) {
-	                resolve(res);
-	            },
+	    var cachedGeocode = localStorage.getItem('geocode_' + location.name);
 
-	            error: function error(xhr, status, _error3) {
-	                reject(_error3);
-	            }
+	    if (cachedGeocode) {
+	        cachedGeocode = JSON.parse(cachedGeocode);
+	        return _Promise.resolve(cachedGeocode);
+	    } else {
+	        return new _Promise(function (resolve, reject) {
+	            _jquery2['default'].ajax(config.geocodeURI + '?address=' + location.name + '&key=' + config.geocodeToken, {
+	                method: 'GET',
+	                success: function success(res, status, xhr) {
+	                    localStorage.setItem('geocode_' + location.name, JSON.stringify(res));
+	                    resolve(res);
+	                },
 
+	                error: function error(xhr, status, _error3) {
+	                    reject(_error3);
+	                }
+
+	            });
 	        });
-	    });
+	    }
 	}
 
 	function allDataLoaded() {
