@@ -124,7 +124,7 @@ function uberLookup({type, start_lat, start_lng, end_lat, end_lng, cityName} = {
 
     if(cachedUber) {
         cachedUber = JSON.parse(cachedUber);
-        if(Date.now() - cachedUber.timestamp / 1000 > 60) {
+        if(Date.now() - cachedUber.timestamp / 1000 < 60) {
             return Promise.resolve(cachedUber);
         }
     } else {
