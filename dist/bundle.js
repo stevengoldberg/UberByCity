@@ -23379,7 +23379,7 @@
 	    var end_lng = _ref.end_lng;
 	    var cityName = _ref.cityName;
 
-	    var cachedUber = localStorage.getItem('uber_' + cityName + '_' + type);
+	    var cachedUber = localStorage.getItem('uber_' + cityName + '_' + type + '_' + start_lat);
 
 	    if (cachedUber) {
 	        cachedUber = JSON.parse(cachedUber);
@@ -23394,7 +23394,7 @@
 	                    Authorization: 'Token ' + config.uberToken
 	                },
 	                success: function success(res, status, xhr) {
-	                    localStorage.setItem('uber_' + cityName + '_' + type, JSON.stringify((0, _objectAssign2['default'])({}, res, { timestamp: Date.now() })));
+	                    localStorage.setItem('uber_' + cityName + '_' + type + '_' + start_lat, JSON.stringify((0, _objectAssign2['default'])({}, res, { timestamp: Date.now() })));
 	                    resolve(res);
 	                },
 
