@@ -50,6 +50,7 @@ export default class Chart extends Component {
 			this.actions.requestData({
 				compare: this.props.compare,
 				cities: this.props.cities,
+				reset: 'countdown',
 			});
 		}
 	}

@@ -23,10 +23,7 @@ export function chart(state = initialState, action = {}) {
             const { data: { reset, compare } } = action;
             let newGraphData;
             let newCountdown;
-
-            /*
-             * When 'reset' is passed because e.g. the comparison has changed, start the graph with a clean slate.
-             */
+            let newRefresh;
 
             if(reset === 'graph') {
                 newGraphData = [];
@@ -34,12 +31,21 @@ export function chart(state = initialState, action = {}) {
                 newGraphData = state.graphData;
             }
 
+            if(reset === 'countdown') {
+                newRefresh = new Date().toLocaleTimeString();
+                newCountdown = initialState.countdown;
+            } else {
+                newRefresh = state.refreshTime;
+                newCountdown = state.countdown;
+            }
+
             return {
                 ...state,
                 graphData: newGraphData,
                 loading: true,
-                countdown: initialState.countdown,
                 compare,
+                countdown: newCountdown,
+                refreshTime: newRefresh,
             };
         },
 
@@ -205,7 +211,6 @@ export function chart(state = initialState, action = {}) {
                 ...state,
                 citiesOnChart,
                 loading: false,
-                refreshTime: new Date().toLocaleTimeString(),
             };
         },
 
