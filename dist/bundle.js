@@ -14920,7 +14920,7 @@
 			value: 'estimates/time'
 		}],
 		debug: false,
-		countdown: 60
+		countdown: 90
 	}, {
 		uberToken: {
 			get: function get() {
@@ -23382,7 +23382,7 @@
 	    var cachedUber = localStorage.getItem('uber_' + cityName + '_' + type + '_' + start_lat) || null;
 	    cachedUber = JSON.parse(cachedUber);
 
-	    if (cachedUber && (Date.now() - cachedUber.timestamp) / 1000 < 60) {
+	    if (cachedUber && (Date.now() - cachedUber.timestamp) / 1000 < config.countdown - 1) {
 	        return _Promise.resolve(cachedUber);
 	    } else {
 	        return new _Promise(function (resolve, reject) {
@@ -24023,7 +24023,8 @@
 				if (this.props.countdown === 0) {
 					this.actions.requestData({
 						compare: this.props.compare,
-						cities: this.props.cities
+						cities: this.props.cities,
+						reset: 'countdown'
 					});
 				}
 			}
@@ -24688,10 +24689,7 @@
 
 	        var newGraphData = undefined;
 	        var newCountdown = undefined;
-
-	        /*
-	         * When 'reset' is passed because e.g. the comparison has changed, start the graph with a clean slate.
-	         */
+	        var newRefresh = undefined;
 
 	        if (reset === 'graph') {
 	            newGraphData = [];
@@ -24699,11 +24697,20 @@
 	            newGraphData = state.graphData;
 	        }
 
+	        if (reset === 'countdown') {
+	            newRefresh = new Date().toLocaleTimeString();
+	            newCountdown = initialState.countdown;
+	        } else {
+	            newRefresh = state.refreshTime;
+	            newCountdown = state.countdown;
+	        }
+
 	        return _extends({}, state, {
 	            graphData: newGraphData,
 	            loading: true,
-	            countdown: initialState.countdown,
-	            compare: compare
+	            compare: compare,
+	            countdown: newCountdown,
+	            refreshTime: newRefresh
 	        });
 	    }), _defineProperty(_createReducer, _constantsAppActions.appActionTypes.UBER_DATA_SUCCEEDED, function (state, action) {
 	        var _action$data2 = action.data;
@@ -24852,8 +24859,7 @@
 
 	        return _extends({}, state, {
 	            citiesOnChart: citiesOnChart,
-	            loading: false,
-	            refreshTime: new Date().toLocaleTimeString()
+	            loading: false
 	        });
 	    }), _defineProperty(_createReducer, _constantsAppActions.appActionTypes.TIMER_TICK, function (state, action) {
 	        var newTime = state.countdown - 1;
