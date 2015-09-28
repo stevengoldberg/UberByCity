@@ -15,16 +15,17 @@ export default class Controls extends Component {
 	}
 
 	static propTypes = {
-		compare: PropTypes.string.isRequired,
-		cities: PropTypes.array.isRequired,
-		graphData: PropTypes.array.isRequired,
-		displayProduct: PropTypes.string.isRequired,
+		addCity: PropTypes.func.isRequired,
+		removeCity: PropTypes.func.isRequired,
+		countdownTick: PropTypes.func.isRequired,
+		changeDisplayProduct: PropTypes.func.isRequired,
+		changeComparison: PropTypes.func.isRequired,
+		requestNewAirport: PropTypes.func.isRequired,
 	}
 
 	componentDidMount() {
-		const { actions } = this.props;
 		this.D3Graph = new D3Graph(this.refs.graph, this.getChartState(), this.props.requestNewAirport);
-		this.timer = setInterval(actions.countdownTick, 1000);
+		this.timer = setInterval(this.props.countdownTick, 1000);
 	}
 
 	componentDidUpdate(prevProps) {
@@ -91,17 +92,14 @@ export default class Controls extends Component {
 	}
 
 	onProductChanged = () => {
-		const { actions } = this.props;
-		actions.changeDisplayProduct(this.refs.productList.value);
+		this.props.changeDisplayProduct(this.refs.productList.value);
 	}
 
 	onComparisonChanged = () => {
-		const { actions } = this.props;
-		actions.changeComparison(this.refs.comparisonList.value);
+		this.props.changeComparison(this.refs.comparisonList.value);
 	}
 
 	render() {
-		const { actions } = this.props;
 		return (
 			<div>
 				<Header />
@@ -115,7 +113,7 @@ export default class Controls extends Component {
 							loading={this.props.loading}
 							canRemove={this.props.cities.length > 1}
 							citiesOnChart={this.props.citiesOnChart}
-							removeCity={actions.removeCity}
+							removeCity={this.props.removeCity}
 							addCity={this.props.addCity}
 						/>
 					</div>

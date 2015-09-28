@@ -17,6 +17,18 @@ export default class ChartContainer extends Component {
 		this.actions = bindActionCreators(actionCreators, this.props.dispatch);
 	}
 
+	static propTypes = {
+		compare: PropTypes.string.isRequired,
+		cities: PropTypes.array.isRequired,
+		graphData: PropTypes.array.isRequired,
+		displayProduct: PropTypes.string.isRequired,
+		cityError: PropTypes.bool.isRequired,
+	    erroredCities: PropTypes.array.isRequired,
+	    citiesOnChart: PropTypes.array.isRequired,
+	    refreshTime: PropTypes.string.isRequired,
+	    countdown: PropTypes.number.isRequired,
+	}
+
 	componentDidMount() {
 		this.refreshData();
 	}
@@ -73,8 +85,11 @@ export default class ChartContainer extends Component {
 	render = () => {
 		return (
 			<Controls 
-				actions={this.actions}
 				addCity={this.addCity}
+				removeCity={this.actions.removeCity}
+				countdownTick={this.actions.countdownTick}
+				changeDisplayProduct={this.actions.changeDisplayProduct}
+				changeComparison={this.actions.changeComparison}
 				requestNewAirport={this.requestNewAirport}
 				{...this.props}
 			/>
