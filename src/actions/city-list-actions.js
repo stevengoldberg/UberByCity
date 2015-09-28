@@ -24,10 +24,3 @@ export function removeCity(city) {
 		})}, 250);
 	};
 }
-
-function deleteCity(city) {
-	return {
-		type: cityActionTypes.CITY_REMOVED,
-		data: city,
-	}
-}

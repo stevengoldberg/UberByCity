@@ -108,11 +108,8 @@ export function requestData(options) {
     };
 }
 
-export function changeComparison(data) {
-    const { compare, cities } = data;
+export function changeComparison(compare) {
 
-    requestData(data);
-    
     return {
         type: appActionTypes.COMPARISON_CHANGED,
         compare,

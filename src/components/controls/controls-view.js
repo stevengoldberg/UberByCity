@@ -1,26 +1,15 @@
 import React, { Component, PropTypes } from 'react';
-import assign from 'object-assign';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import * as config from 'config';
-import _ from 'underscore';
 
 // Component styles
 import styles from './controls.styles.js';
 
-// Actions
-import * as chartActions from '../../actions/chart-actions';
-import * as cityActions from '../../actions/city-list-actions';
-
 // Components
 import { CityList, Header, D3Graph, Refresh } from '../../components';
 
-@connect(state => state.chart)
-export default class Chart extends Component {
+export default class Controls extends Component {
 	constructor(props) {
 		super(props);
-		const actionCreators = assign({}, chartActions, cityActions);
-		this.actions = bindActionCreators(actionCreators, this.props.dispatch);
 		this.D3Graph = null;
 		this.timer = null;
 	}
@@ -33,37 +22,15 @@ export default class Chart extends Component {
 	}
 
 	componentDidMount() {
-		this.actions.requestData({
-			compare: this.props.compare,
-			cities: this.props.cities,
-		});
-
-		this.D3Graph = new D3Graph(this.refs.graph, this.getChartState(), this.requestNewAirport);
-		this.timer = setInterval(this.actions.countdownTick, 1000);
+		const { actions } = this.props;
+		this.D3Graph = new D3Graph(this.refs.graph, this.getChartState(), this.props.requestNewAirport);
+		this.timer = setInterval(actions.countdownTick, 1000);
 	}
 
 	componentDidUpdate(prevProps) {
 		if ((prevProps.loading === true && this.props.loading === false) || prevProps.displayProduct !== this.props.displayProduct) {
 			this.D3Graph.update(this.getChartState());
 		}
-		if(this.props.countdown === 0) {
-			this.actions.requestData({
-				compare: this.props.compare,
-				cities: this.props.cities,
-				reset: 'countdown',
-			});
-		}
-	}
-
-	requestNewAirport = (city) => {
-		const newCities = [].concat(this.props.cities);
-		const currentCity = _.findWhere(newCities, {name: city});
-		currentCity.index = (currentCity.index + 1) % currentCity.airports.length;
-
-		this.actions.requestData({
-			cities: [currentCity],
-			compare: this.props.compare,
-		});
 	}
 
 	getChartState() {
@@ -83,24 +50,6 @@ export default class Chart extends Component {
 	componentWillUnmount() {
 		this.D3Graph.destroy(this.refs.graph);
 		clearInterval(this.timer);
-	}
-
-	addCity = (city) => {
-		if(!_.findWhere(this.props.cities, {name: city})) {
-			const cities = [
-				{
-					name: city,
-					index: 0,
-				},
-			];
-			this.actions.requestData({
-				compare: this.props.compare,
-				cities,
-			});
-		} else {
-			this.actions.dataError(city);
-		}
-		
 	}
 
 	buildProductList = () => {
@@ -142,18 +91,17 @@ export default class Chart extends Component {
 	}
 
 	onProductChanged = () => {
-		this.actions.changeDisplayProduct(this.refs.productList.value);
+		const { actions } = this.props;
+		actions.changeDisplayProduct(this.refs.productList.value);
 	}
 
 	onComparisonChanged = () => {
-		this.actions.requestData({
-			compare: this.refs.comparisonList.value,
-			cities: this.props.cities,
-			reset: 'graph',
-		});
+		const { actions } = this.props;
+		actions.changeComparison(this.refs.comparisonList.value);
 	}
 
 	render() {
+		const { actions } = this.props;
 		return (
 			<div>
 				<Header />
@@ -163,12 +111,12 @@ export default class Chart extends Component {
 							cities={this.props.cities}
 							erroredCities={this.props.erroredCities}
 							graphData={this.props.graphData}
-							removeCity={this.actions.removeCity}
-							addCity={this.addCity}
 							showError={this.props.cityError}
 							loading={this.props.loading}
 							canRemove={this.props.cities.length > 1}
 							citiesOnChart={this.props.citiesOnChart}
+							removeCity={actions.removeCity}
+							addCity={this.props.addCity}
 						/>
 					</div>
 					<div className={styles.selectContainer}>

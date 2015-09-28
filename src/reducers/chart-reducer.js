@@ -20,23 +20,22 @@ const initialState = {
 export function chart(state = initialState, action = {}) {
     return createReducer(state, action, {
         [appActionTypes.NEW_DATA_REQUESTED](state, action) {
-            const { data: { reset, compare } } = action;
+            const { data: { reset, compare, refreshTime = state.refreshTime } } = action;
             let newGraphData;
-            let newCountdown;
-            let newRefresh;
+            let newCountdown = state.countdown;
 
-            if(reset === 'graph') {
+            // Reset the data when changing data type
+
+            if(compare !== state.compare) {
                 newGraphData = [];
             } else {
                 newGraphData = state.graphData;
             }
 
-            if(reset === 'countdown') {
-                newRefresh = new Date().toLocaleTimeString();
+            // Reset the counter when it's run out
+
+            if(state.countdown === 0) {
                 newCountdown = initialState.countdown;
-            } else {
-                newRefresh = state.refreshTime;
-                newCountdown = state.countdown;
             }
 
             return {
@@ -45,7 +44,7 @@ export function chart(state = initialState, action = {}) {
                 loading: true,
                 compare,
                 countdown: newCountdown,
-                refreshTime: newRefresh,
+                refreshTime,
             };
         },
 
